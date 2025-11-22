@@ -1,124 +1,61 @@
-<?php
-/**
- * The template for displaying single portfolio projects
- */
+<?php get_header(); ?>
 
-get_header();
+<?php
+while ( have_posts() ) : the_post();
+    $location = get_post_meta( get_the_ID(), '_pg_location', true );
+    $year = get_post_meta( get_the_ID(), '_pg_year', true );
+    $challenge = get_post_meta( get_the_ID(), '_pg_challenge', true );
+    $solution = get_post_meta( get_the_ID(), '_pg_solution', true );
+    $img_url = get_the_post_thumbnail_url( get_the_ID(), 'full' ) ?: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1200';
+    
+    $terms = get_the_terms( get_the_ID(), 'portfolio_category' );
+    $category = ($terms && !is_wp_error($terms)) ? $terms[0]->name : 'Project';
 ?>
 
-<main class="min-h-screen bg-gradient-to-b from-white to-gray-50 pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
-        <?php while ( have_posts() ) : the_post(); ?>
-            
-            <!-- Breadcrumb -->
-            <div class="mb-8 text-sm text-gray-500">
-                <a href="<?php echo home_url('/'); ?>" class="hover:text-blue-600">Home</a>
-                <span class="mx-2">/</span>
-                <a href="<?php echo home_url('/portfolio'); ?>" class="hover:text-blue-600">Portfolio</a>
-                <span class="mx-2">/</span>
-                <span class="text-gray-900"><?php the_title(); ?></span>
+<div class="animate-in pt-24 pb-20">
+    <div class="container mx-auto px-4">
+        <a href="<?php echo home_url('/portfolio'); ?>" class="mb-8 inline-flex items-center text-gray-500 hover:text-[#0A2342] transition-colors">
+            <i data-lucide="chevron-left" class="mr-2"></i> Back to Portfolio
+        </a>
+
+        <div class="grid lg:grid-cols-2 gap-12 mb-16">
+            <div class="rounded-2xl overflow-hidden shadow-2xl">
+                <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="w-full h-full object-cover" />
             </div>
-
-            <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    
-                    <!-- Image Gallery / Featured Image -->
+            <div class="flex flex-col justify-center">
+                <span class="text-[#D4AF37] font-bold tracking-widest uppercase mb-2"><?php echo esc_html($category); ?></span>
+                <h1 class="text-4xl md:text-5xl font-bold text-[#0A2342] mb-6"><?php the_title(); ?></h1>
+                
+                <div class="grid grid-cols-2 gap-6 mb-8 border-y border-gray-100 py-6">
                     <div>
-                        <?php if ( has_post_thumbnail() ) : ?>
-                            <div class="rounded-2xl overflow-hidden shadow-lg mb-6 glass border border-gray-200">
-                                <?php the_post_thumbnail('large', ['class' => 'w-full h-auto object-cover']); ?>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <!-- If you had a gallery plugin or custom fields for more images, they would go here -->
+                        <span class="block text-gray-400 text-xs uppercase mb-1">Location</span>
+                        <span class="font-medium text-[#0A2342] flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-1"></i> <?php echo esc_html($location); ?></span>
                     </div>
-
-                    <!-- Project Details -->
                     <div>
-                        <h1 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6"><?php the_title(); ?></h1>
-                        
-                        <!-- Categories -->
-                        <?php
-                        $terms = get_the_terms( get_the_ID(), 'portfolio_category' );
-                        if ( $terms && ! is_wp_error( $terms ) ) : 
-                        ?>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <?php foreach ( $terms as $term ) : ?>
-                                    <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
-                                        <?php echo esc_html( $term->name ); ?>
-                                    </span>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <div class="prose prose-lg prose-blue text-gray-600 mb-8">
-                            <?php the_content(); ?>
-                        </div>
-
-                        <!-- Project Meta (Example fields) -->
-                        <div class="grid grid-cols-2 gap-6 border-t border-gray-200 pt-8">
-                            <div>
-                                <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-1">Client</h4>
-                                <p class="text-gray-600">Private Client</p> <!-- Dynamic if using ACF -->
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-1">Date</h4>
-                                <p class="text-gray-600"><?php echo get_the_date('F Y'); ?></p>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-1">Service</h4>
-                                <p class="text-gray-600">Installation</p> <!-- Dynamic if using ACF -->
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-1">Location</h4>
-                                <p class="text-gray-600">Puchong, Selangor</p> <!-- Dynamic if using ACF -->
-                            </div>
-                        </div>
-
-                        <div class="mt-10">
-                            <a href="<?php echo home_url('/contact'); ?>" class="w-full sm:w-auto px-8 py-4 text-lg font-semibold smooth-transition rounded-full inline-flex items-center justify-center gap-2 bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg">
-                                Get a Quote Like This <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                            </a>
-                        </div>
+                        <span class="block text-gray-400 text-xs uppercase mb-1">Year</span>
+                        <span class="font-medium text-[#0A2342] flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i> <?php echo esc_html($year); ?></span>
                     </div>
                 </div>
-            </article>
 
-            <!-- Related Projects -->
-            <div class="mt-20 border-t border-gray-200 pt-16">
-                <h2 class="font-serif text-3xl font-bold text-gray-900 mb-8">Other Projects</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <?php
-                    $related = new WP_Query( array(
-                        'post_type' => 'portfolio',
-                        'posts_per_page' => 3,
-                        'post__not_in' => array( get_the_ID() ),
-                        'orderby' => 'rand'
-                    ));
-
-                    if ( $related->have_posts() ) :
-                        while ( $related->have_posts() ) : $related->the_post();
-                    ?>
-                        <a href="<?php the_permalink(); ?>" class="group block">
-                            <div class="rounded-xl overflow-hidden mb-4 h-48 relative">
-                                <?php if ( has_post_thumbnail() ) : ?>
-                                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-110 smooth-transition']); ?>
-                                <?php else: ?>
-                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">No Image</div>
-                                <?php endif; ?>
-                            </div>
-                            <h3 class="font-bold text-gray-900 group-hover:text-blue-600 smooth-transition"><?php the_title(); ?></h3>
-                        </a>
-                    <?php
-                        endwhile;
-                        wp_reset_postdata();
-                    endif;
-                    ?>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-bold text-[#0A2342] mb-2">The Challenge</h3>
+                        <p class="text-gray-600"><?php echo esc_html($challenge); ?></p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-[#0A2342] mb-2">The Solution</h3>
+                        <p class="text-gray-600"><?php echo esc_html($solution); ?></p>
+                    </div>
                 </div>
-            </div>
 
-        <?php endwhile; ?>
+                <button onclick="openQuote('Similar to <?php the_title(); ?>')" class="mt-8 px-8 py-4 bg-[#0A2342] text-white font-bold rounded-lg hover:bg-[#1E5A8E] transition-colors self-start">
+                    Request Similar Project
+                </button>
+            </div>
+        </div>
     </div>
-</main>
+</div>
+
+<?php endwhile; ?>
 
 <?php get_footer(); ?>

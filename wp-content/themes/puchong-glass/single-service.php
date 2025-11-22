@@ -1,73 +1,97 @@
-<?php
-/**
- * The template for displaying single services
- */
+<?php get_header(); ?>
 
-get_header();
+<?php
+while ( have_posts() ) : the_post();
+    $icon = get_post_meta( get_the_ID(), '_pg_icon', true ) ?: 'Shield';
+    $specs = get_post_meta( get_the_ID(), '_pg_specs', true );
+    $benefits = get_post_meta( get_the_ID(), '_pg_benefits', true );
+    $img_url = get_the_post_thumbnail_url( get_the_ID(), 'full' ) ?: 'https://images.unsplash.com/photo-1505691938895-1758d7bab58d?auto=format&fit=crop&q=80&w=1200';
 ?>
 
-<main class="min-h-screen bg-gradient-to-b from-white to-gray-50 pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
-        <?php while ( have_posts() ) : the_post(); ?>
-            
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <div class="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 mb-4">
-                    <span class="text-sm font-semibold text-blue-600">Our Services</span>
-                </div>
-                <h1 class="font-serif text-5xl font-bold text-gray-900 mb-6"><?php the_title(); ?></h1>
-                <div class="text-xl text-gray-600">
-                    <?php the_excerpt(); ?>
-                </div>
-            </div>
-
-            <div class="relative rounded-2xl overflow-hidden h-96 mb-16 shadow-xl">
-                <?php if ( has_post_thumbnail() ) : ?>
-                    <?php the_post_thumbnail('full', ['class' => 'w-full h-full object-cover']); ?>
-                <?php else: ?>
-                    <img src="https://placehold.co/1200x600?text=Service+Image" class="w-full h-full object-cover" alt="<?php the_title(); ?>">
-                <?php endif; ?>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                <div class="lg:col-span-2">
-                    <div class="prose prose-lg prose-blue max-w-none text-gray-600">
-                        <?php the_content(); ?>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-1">
-                    <div class="glass p-8 rounded-xl border border-gray-200 sticky top-32">
-                        <h3 class="font-serif text-2xl font-bold text-gray-900 mb-6">Interested in this service?</h3>
-                        <p class="text-gray-600 mb-6">Contact us today for a free consultation and quote.</p>
-                        
-                        <ul class="space-y-4 mb-8">
-                            <li class="flex items-center gap-3 text-gray-700">
-                                <i data-lucide="check-circle" class="text-green-500 w-5 h-5"></i>
-                                <span>Professional Installation</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-700">
-                                <i data-lucide="check-circle" class="text-green-500 w-5 h-5"></i>
-                                <span>Quality Materials</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-700">
-                                <i data-lucide="check-circle" class="text-green-500 w-5 h-5"></i>
-                                <span>Warranty Included</span>
-                            </li>
-                        </ul>
-
-                        <a href="<?php echo home_url('/contact'); ?>" class="block w-full py-3 rounded-lg bg-blue-500 text-white font-semibold text-center smooth-transition hover:bg-blue-600 mb-3">
-                            Get a Quote
-                        </a>
-                        <a href="https://wa.me/60123456789" class="block w-full py-3 rounded-lg border-2 border-green-500 text-green-600 font-semibold text-center smooth-transition hover:bg-green-50">
-                            WhatsApp Us
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        <?php endwhile; ?>
+<div class="animate-in">
+    <!-- Hero Header -->
+    <div class="relative h-[50vh] flex items-center justify-center">
+        <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="absolute inset-0 w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-[#0A2342]/80"></div>
+        <div class="relative z-10 text-center container px-4">
+            <a href="<?php echo home_url('/services'); ?>" class="mb-6 inline-flex items-center text-gray-300 hover:text-white transition-colors">
+                <i data-lucide="chevron-left" class="mr-2"></i> Back to Services
+            </a>
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4"><?php the_title(); ?></h1>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto"><?php echo get_the_excerpt(); ?></p>
+        </div>
     </div>
-</main>
+
+    <div class="container mx-auto px-4 py-16 grid md:grid-cols-3 gap-12">
+        <!-- Main Content -->
+        <div class="md:col-span-2 space-y-12">
+            <div>
+                <h3 class="text-2xl font-bold text-[#0A2342] mb-4">Overview</h3>
+                <div class="text-gray-600 leading-relaxed text-lg">
+                    <?php the_content(); ?>
+                </div>
+            </div>
+            
+            <?php if ( is_array($benefits) && !empty($benefits) ) : ?>
+            <div>
+                <h3 class="text-2xl font-bold text-[#0A2342] mb-6">Key Benefits</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <?php foreach($benefits as $benefit) : ?>
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                        <i data-lucide="check" class="w-5 h-5 text-[#D4AF37] mr-3"></i>
+                        <span class="font-medium text-gray-700"><?php echo esc_html($benefit); ?></span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if ( is_array($specs) && !empty($specs) ) : ?>
+            <div>
+                <h3 class="text-2xl font-bold text-[#0A2342] mb-6">Technical Specifications</h3>
+                <div class="bg-white border rounded-xl overflow-hidden shadow-sm">
+                    <table class="w-full">
+                        <tbody>
+                            <?php foreach($specs as $spec) : 
+                                $parts = explode(':', $spec, 2);
+                                $key = isset($parts[0]) ? $parts[0] : '';
+                                $val = isset($parts[1]) ? $parts[1] : '';
+                            ?>
+                            <tr class="border-b last:border-0 hover:bg-gray-50">
+                                <td class="p-4 font-bold text-[#0A2342] w-1/3"><?php echo esc_html($key); ?></td>
+                                <td class="p-4 text-gray-600"><?php echo esc_html($val); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-8">
+            <div class="bg-[#0A2342] text-white p-8 rounded-2xl shadow-xl">
+                <h3 class="text-2xl font-bold mb-2">Interested?</h3>
+                <p class="text-gray-300 mb-6">Get a custom quote for <?php the_title(); ?> today.</p>
+                <button onclick="openQuote('<?php the_title(); ?>')" class="w-full py-4 bg-[#D4AF37] text-[#0A2342] font-bold rounded-lg mb-4 hover:bg-white transition-colors">Get Instant Quote</button>
+                <a href="https://wa.me/60123456789" target="_blank" class="w-full py-4 bg-transparent border border-white/20 hover:bg-white/10 text-white font-bold rounded-lg flex items-center justify-center">
+                    <i data-lucide="message-circle" class="mr-2"></i> WhatsApp Us
+                </a>
+            </div>
+            
+            <div class="bg-gray-100 p-8 rounded-2xl">
+                <h4 class="font-bold text-[#0A2342] mb-4 flex items-center"><i data-lucide="zap" class="w-5 h-5 mr-2 text-[#D4AF37]"></i> Why Choose Us?</h4>
+                <ul class="space-y-3 text-sm text-gray-600">
+                    <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 10-Year Warranty</li>
+                    <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Certified Installers</li>
+                    <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Factory Direct Price</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php endwhile; ?>
 
 <?php get_footer(); ?>

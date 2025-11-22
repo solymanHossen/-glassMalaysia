@@ -1,368 +1,99 @@
-<?php
-/**
- * Template Name: Home Page
- */
+<?php get_header(); ?>
 
-get_header();
-?>
-
-<main class="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-
-    <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div class="absolute inset-0 opacity-5">
-            <div class="absolute top-20 right-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-20 left-10 w-96 h-96 bg-blue-200 rounded-full blur-3xl"></div>
+<div class="animate-in">
+    <!-- Hero -->
+    <section class="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&q=80&w=2000" alt="Modern House" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0A2342]/95 via-[#0A2342]/70 to-transparent"></div>
         </div>
-
-        <div class="max-w-7xl mx-auto relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <!-- Content -->
-                <div>
-                    <div class="inline-block px-4 py-2 rounded-full bg-blue-50 border border-blue-200 mb-6">
-                        <span class="text-sm font-semibold text-blue-600">Premium Glass Solutions</span>
-                    </div>
-
-                    <h1 class="text-balance font-serif text-5xl sm:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                        Transform Your Spaces with Premium Glass & Aluminiumdd
-                    </h1>
-
-                    <p class="text-balance text-lg text-gray-600 mb-8 leading-relaxed max-w-xl">
-                        Expert craftsmanship for residential and commercial projects. From custom glass installations to aluminium fabrication, we bring precision and elegance to every project.
-                    </p>
-
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="<?php echo home_url('/contact'); ?>" class="px-8 py-4 text-lg font-semibold smooth-transition rounded-full inline-flex items-center justify-center gap-2 bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/30">
-                            Get Quote <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                        </a>
-                        <a href="<?php echo home_url('/portfolio'); ?>" class="px-8 py-4 text-lg font-semibold smooth-transition rounded-full inline-flex items-center justify-center gap-2 bg-gray-200 text-gray-900 hover:bg-gray-300 hover:shadow-lg">
-                            See Portfolio <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                        </a>
-                    </div>
-
-                    <!-- Trust Badges -->
-                    <div class="mt-12 grid grid-cols-3 gap-6">
-                        <div>
-                            <div class="text-2xl font-bold text-blue-600">500+</div>
-                            <p class="text-sm text-gray-600">Projects Completed</p>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-blue-600">15+</div>
-                            <p class="text-sm text-gray-600">Years Experience</p>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-blue-600">100%</div>
-                            <p class="text-sm text-gray-600">Client Satisfied</p>
-                        </div>
-                    </div>
+        <div class="container mx-auto px-4 relative z-10 grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 animate-slide-up">
+                <div class="inline-block px-4 py-1 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/50 text-[#D4AF37] text-sm font-bold tracking-wider">PREMIUM GLASS SPECIALISTS</div>
+                <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight">Clear Vision. <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#F4E5C2]">Solid Protection.</span></h1>
+                <p class="text-lg text-gray-300 max-w-lg leading-relaxed">From elegant shower screens to commercial shopfronts – we deliver excellence in every installation across Puchong & Selangor.</p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <button onclick="openQuote()" class="px-8 py-4 bg-[#D4AF37] hover:bg-[#b8962e] text-[#0A2342] font-bold rounded-lg shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all hover:scale-105 flex items-center gap-2">
+                        Get Free Quote <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                    <a href="<?php echo home_url('/portfolio'); ?>" class="px-8 py-4 glass-panel text-white font-bold rounded-lg hover:bg-white/10 transition-all flex items-center">
+                        <i data-lucide="play" class="w-5 h-5 mr-2 fill-white"></i> View Projects
+                    </a>
                 </div>
-
-                <!-- Hero Image -->
-                <div class="relative">
-                    <div class="glass rounded-2xl overflow-hidden h-96 sm:h-full min-h-96">
-                        <?php
-                            if ( has_post_thumbnail() ) {
-                                the_post_thumbnail( 'puchong-hero', array(
-                                    'class' => 'w-full h-full object-cover',
-                                    'alt' => get_the_title(),
-                                    'loading' => 'lazy',
-                                    'decoding' => 'async',
-                                ) );
-                            } else {
-                                ?>
-                                <img 
-                                    src="<?php echo esc_url( Puchong_Image_Helper::get_placeholder_image( 'puchong-hero' ) ); ?>" 
-                                    alt="<?php esc_attr_e( 'Premium glass and aluminium installation', 'puchong-glass' ); ?>"
-                                    width="1920"
-                                    height="1080"
-                                    class="w-full h-full object-cover"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
-                                <?php
-                            }
-                        ?>
-                    </div>
-                    <div class="absolute -bottom-8 -right-8 w-32 h-32 glass rounded-xl p-4 backdrop-blur-xl">
-                        <div class="text-3xl font-bold text-blue-600 mb-1">5★</div>
-                        <p class="text-xs text-gray-600"><?php esc_html_e( 'Rated by 480+ clients', 'puchong-glass' ); ?></p>
-                    </div>
+                <div class="flex items-center gap-6 pt-8 text-sm text-gray-400 font-mono-nums">
+                    <div class="flex items-center gap-2"><i data-lucide="star" class="text-[#D4AF37] fill-[#D4AF37] w-4 h-4"></i><span>4.9/5 Rating</span></div>
+                    <div class="w-px h-4 bg-gray-600"></div><div>5000+ Projects</div><div class="w-px h-4 bg-gray-600"></div><div>20+ Years Exp.</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Preview Section -->
-    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="font-serif text-4xl font-bold text-gray-900 mb-4">Our Premium Services</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    Comprehensive glass and aluminium solutions tailored to your needs
-                </p>
+    <!-- Featured Services -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 animate-in">
+                <h4 class="font-bold tracking-widest text-sm mb-2 text-[#0A2342]">OUR EXPERTISE</h4>
+                <h2 class="text-3xl md:text-5xl font-bold text-[#0A2342]">Premium Services</h2>
+                <div class="w-20 h-1 mx-auto mt-4 rounded bg-[#0A2342]"></div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <?php
-                $services_query = new WP_Query(array(
-                    'post_type' => 'service',
-                    'posts_per_page' => 6,
-                    'orderby' => 'menu_order',
-                    'order' => 'ASC'
-                ));
-
-                if ( $services_query->have_posts() ) :
-                    while ( $services_query->have_posts() ) : $services_query->the_post();
-                ?>
-                    <a href="<?php the_permalink(); ?>" class="group p-6 rounded-xl glass smooth-hover border border-gray-200 hover:border-blue-300 hover:shadow-xl block transition-all duration-300">
-                        <div class="text-blue-500 mb-4 group-hover:scale-110 smooth-transition">
-                            <i data-lucide="zap" class="w-8 h-8"></i>
+                $services = new WP_Query( array( 'post_type' => 'service', 'posts_per_page' => 3 ) );
+                if ( $services->have_posts() ) :
+                    while ( $services->have_posts() ) : $services->the_post();
+                        $icon = get_post_meta( get_the_ID(), '_pg_icon', true ) ?: 'Shield';
+                        ?>
+                        <div onclick="window.location.href='<?php the_permalink(); ?>'" class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all cursor-pointer group border border-gray-100">
+                            <div class="w-14 h-14 bg-[#0A2342]/5 rounded-xl flex items-center justify-center text-[#0A2342] mb-6 group-hover:bg-[#0A2342] group-hover:text-[#D4AF37] transition-colors">
+                                <i data-lucide="<?php echo strtolower($icon); ?>"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-[#0A2342] mb-3"><?php the_title(); ?></h3>
+                            <p class="text-gray-600 mb-6 line-clamp-2"><?php echo get_the_excerpt(); ?></p>
+                            <span class="text-[#D4AF37] font-bold text-sm flex items-center group-hover:translate-x-2 transition-transform">Learn More <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></span>
                         </div>
-                        <h3 class="font-serif text-xl font-bold text-gray-900 mb-2"><?php the_title(); ?></h3>
-                        <div class="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                            <?php the_excerpt(); ?>
-                        </div>
-                    </a>
-                <?php 
+                        <?php
                     endwhile;
                     wp_reset_postdata();
                 else:
-                    // Fallback if no services exist yet
-                    $services = [
-                        ['icon' => 'zap', 'title' => 'Glass Installation', 'desc' => 'Custom glass installations for windows, doors, and architectural elements with precision and durability.', 'link' => '/services#glass'],
-                        ['icon' => 'wrench', 'title' => 'Aluminium Work', 'desc' => 'Professional aluminium fabrication, framing, and installation for modern and contemporary designs.', 'link' => '/services#aluminium'],
-                        ['icon' => 'award', 'title' => 'Grill Installation', 'desc' => 'Premium grill designs and installations for security and aesthetics. Residential and commercial grade.', 'link' => '/services#grill'],
-                    ];
-                    foreach ($services as $service) : ?>
-                        <a href="<?php echo home_url($service['link']); ?>" class="group p-6 rounded-xl glass smooth-hover border border-gray-200 hover:border-blue-300 hover:shadow-xl block transition-all duration-300">
-                            <div class="text-blue-500 mb-4 group-hover:scale-110 smooth-transition">
-                                <i data-lucide="<?php echo $service['icon']; ?>" class="w-8 h-8"></i>
-                            </div>
-                            <h3 class="font-serif text-xl font-bold text-gray-900 mb-2"><?php echo $service['title']; ?></h3>
-                            <p class="text-gray-600 text-sm leading-relaxed"><?php echo $service['desc']; ?></p>
-                        </a>
-                    <?php endforeach; 
+                    echo '<p class="text-center col-span-3">No services found. Please add some in the backend.</p>';
                 endif;
                 ?>
             </div>
-
             <div class="text-center mt-12">
-                <a href="<?php echo home_url('/services'); ?>" class="px-8 py-4 text-lg font-semibold smooth-transition rounded-full inline-flex items-center justify-center gap-2 bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/30">
-                    Explore All Services <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                </a>
+                <a href="<?php echo home_url('/services'); ?>" class="px-8 py-3 border-2 border-[#0A2342] text-[#0A2342] font-bold rounded-lg hover:bg-[#0A2342] hover:text-white transition-all inline-block">View All Services</a>
             </div>
         </div>
     </section>
 
-    <!-- Why Choose Us -->
-    <section class="py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="font-serif text-4xl font-bold text-gray-900 mb-16 text-center">Why Choose Us</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <?php
-                $reasons = [
-                    ['title' => 'Expert Craftsmanship', 'desc' => 'Over 15 years of experience in precision glass and aluminium work.'],
-                    ['title' => 'Quality Materials', 'desc' => 'Premium grade glass and aluminium sourced from trusted suppliers.'],
-                    ['title' => 'On-Time Delivery', 'desc' => 'We respect your time and deliver projects on schedule, every time.'],
-                    ['title' => 'Professional Installation', 'desc' => 'Certified installers ensuring perfect fit and finish on every project.'],
-                    ['title' => 'Competitive Pricing', 'desc' => 'Best value for money without compromising on quality.'],
-                    ['title' => '24/7 Support', 'desc' => 'Round-the-clock customer support for your peace of mind.'],
-                ];
-
-                foreach ($reasons as $reason) : ?>
-                    <div class="p-6 rounded-xl border border-gray-200 smooth-transition hover:border-blue-300 hover:shadow-lg">
-                        <h3 class="font-semibold text-gray-900 mb-2"><?php echo $reason['title']; ?></h3>
-                        <p class="text-gray-600 text-sm"><?php echo $reason['desc']; ?></p>
+    <!-- Before/After -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="text-center md:text-left mb-12 animate-in">
+                        <h4 class="font-bold tracking-widest text-sm mb-2 text-[#0A2342]">TRANSFORMATION</h4>
+                        <h2 class="text-3xl md:text-5xl font-bold text-[#0A2342]">See the Difference</h2>
+                        <div class="w-20 h-1 mx-auto md:mx-0 mt-4 rounded bg-[#0A2342]"></div>
                     </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-blue-500">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="font-serif text-4xl font-bold text-white mb-4">Ready to Transform Your Space?</h2>
-            <p class="text-blue-100 mb-8 text-lg">Get in touch with our team today for a free consultation and quote.</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="https://wa.me/60123456789" class="px-8 py-3 rounded-full bg-white text-blue-600 font-semibold smooth-transition hover:shadow-lg hover:scale-105">
-                    Chat on WhatsApp
-                </a>
-                <a href="<?php echo home_url('/contact'); ?>" class="px-8 py-3 rounded-full border-2 border-white text-white font-semibold smooth-transition hover:bg-white/10">
-                    Contact Form
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section with Slider -->
-    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="font-serif text-4xl font-bold text-gray-900 mb-4 text-center">Client Testimonials</h2>
-            <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
-                Hear what our satisfied clients have to say about our premium glass and aluminium solutions.
-            </p>
-
-            <div class="relative max-w-4xl mx-auto">
-                <?php
-                $testimonials_query = new WP_Query(array(
-                    'post_type' => 'testimonial',
-                    'posts_per_page' => -1,
-                    'orderby' => 'date',
-                    'order' => 'DESC'
-                ));
-
-                if ($testimonials_query->have_posts()) :
-                ?>
-                    <!-- Slider Container -->
-                    <div class="testimonial-slider overflow-hidden">
-                        <div class="testimonial-slides flex transition-transform duration-500 ease-in-out">
-                            <?php while ($testimonials_query->have_posts()) : $testimonials_query->the_post();
-                                $client_name = get_post_meta(get_the_ID(), 'client_name', true) ?: get_the_title();
-                                $client_position = get_post_meta(get_the_ID(), 'client_position', true) ?: 'Client';
-                                $rating = get_post_meta(get_the_ID(), 'rating', true) ?: 5;
-                            ?>
-                                <div class="testimonial-slide w-full flex-shrink-0">
-                                    <div class="glass rounded-2xl border border-gray-200 p-8 sm:p-12 relative min-h-80">
-                                        <div class="text-6xl text-blue-200 opacity-30 absolute top-4 left-6">"</div>
-                                        <div class="relative z-10">
-                                            <div class="flex gap-1 mb-6">
-                                                <?php for($i=0; $i<$rating; $i++): ?>
-                                                    <i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i>
-                                                <?php endfor; ?>
-                                            </div>
-                                            <div class="text-gray-700 text-lg mb-8 leading-relaxed italic">
-                                                <?php the_content(); ?>
-                                            </div>
-                                            <div class="flex items-center gap-4">
-                                                <?php if (has_post_thumbnail()) : ?>
-                                                    <?php the_post_thumbnail('thumbnail', array('class' => 'w-12 h-12 rounded-full object-cover')); ?>
-                                                <?php else: ?>
-                                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0">
-                                                        <span class="text-white font-bold"><?php echo strtoupper(substr($client_name, 0, 1)); ?></span>
-                                                    </div>
-                                                <?php endif; ?>
-                                                <div>
-                                                    <p class="font-semibold text-gray-900"><?php echo esc_html($client_name); ?></p>
-                                                    <p class="text-sm text-gray-600"><?php echo esc_html($client_position); ?></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endwhile; ?>
+                    <p class="text-gray-600 mb-6">Drag the slider to reveal the quality of our workmanship.</p>
+                </div>
+                <div id="before-after-container" class="relative h-[400px] rounded-2xl overflow-hidden cursor-col-resize select-none shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover" />
+                    <div class="absolute top-4 right-4 bg-[#D4AF37] px-3 py-1 font-bold text-xs rounded z-20">AFTER</div>
+                    <div id="before-image-wrapper" class="absolute inset-0 w-full h-full overflow-hidden" style="clip-path: inset(0 50% 0 0);">
+                        <img src="https://images.unsplash.com/photo-1594498653385-d5172c532c00?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 font-bold text-xs rounded z-20">BEFORE</div>
+                    </div>
+                    <div id="slider-handle" class="absolute top-0 bottom-0 w-1 bg-white cursor-col-resize z-30" style="left: 50%;">
+                        <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 bg-white w-8 h-8 rounded-full shadow flex items-center justify-center text-[#0A2342]">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </div>
                     </div>
-
-                    <!-- Slider Controls -->
-                    <button id="prev-testimonial" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 rounded-full bg-white shadow-lg smooth-transition hover:bg-blue-500 hover:text-white flex items-center justify-center z-10">
-                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
-                    </button>
-                    <button id="next-testimonial" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 rounded-full bg-white shadow-lg smooth-transition hover:bg-blue-500 hover:text-white flex items-center justify-center z-10">
-                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
-                    </button>
-
-                    <!-- Dots Indicator -->
-                    <div class="flex justify-center gap-2 mt-8" id="testimonial-dots">
-                        <?php 
-                        $count = $testimonials_query->post_count;
-                        for($i = 0; $i < $count; $i++): 
-                        ?>
-                            <button class="testimonial-dot w-2 h-2 rounded-full bg-gray-300 smooth-transition hover:bg-blue-500 <?php echo $i === 0 ? 'active bg-blue-500 w-8' : ''; ?>" data-index="<?php echo $i; ?>"></button>
-                        <?php endfor; ?>
-                    </div>
-
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const slider = document.querySelector('.testimonial-slides');
-                            const slides = document.querySelectorAll('.testimonial-slide');
-                            const dots = document.querySelectorAll('.testimonial-dot');
-                            const prevBtn = document.getElementById('prev-testimonial');
-                            const nextBtn = document.getElementById('next-testimonial');
-                            
-                            let currentIndex = 0;
-                            const totalSlides = slides.length;
-
-                            function goToSlide(index) {
-                                currentIndex = (index + totalSlides) % totalSlides;
-                                slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-                                
-                                // Update dots
-                                dots.forEach((dot, i) => {
-                                    if (i === currentIndex) {
-                                        dot.classList.add('active', 'bg-blue-500', 'w-8');
-                                        dot.classList.remove('bg-gray-300');
-                                    } else {
-                                        dot.classList.remove('active', 'bg-blue-500', 'w-8');
-                                        dot.classList.add('bg-gray-300');
-                                    }
-                                });
-
-                                lucide.createIcons();
-                            }
-
-                            nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
-                            prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
-
-                            dots.forEach((dot, index) => {
-                                dot.addEventListener('click', () => goToSlide(index));
-                            });
-
-                            // Auto-play
-                            let autoPlayInterval = setInterval(() => goToSlide(currentIndex + 1), 5000);
-
-                            // Pause on hover
-                            slider.parentElement.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
-                            slider.parentElement.addEventListener('mouseleave', () => {
-                                autoPlayInterval = setInterval(() => goToSlide(currentIndex + 1), 5000);
-                            });
-                        });
-                    </script>
-                <?php 
-                    wp_reset_postdata();
-                else:
-                    // Fallback testimonial
-                ?>
-                    <div class="glass rounded-2xl border border-gray-200 p-8 sm:p-12 relative min-h-80">
-                        <div class="text-6xl text-blue-200 opacity-30 absolute top-4 left-6">"</div>
-                        <div class="relative z-10">
-                            <div class="flex gap-1 mb-6">
-                                <?php for($i=0; $i<5; $i++): ?>
-                                    <i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i>
-                                <?php endfor; ?>
-                            </div>
-                            <p class="text-gray-700 text-lg mb-8 leading-relaxed italic">"Puchong Glass transformed our storefront with a stunning custom glass installation. The team was professional, punctual, and delivered exactly what we envisioned. Highly recommended!"</p>
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex-shrink-0"></div>
-                                <div>
-                                    <p class="font-semibold text-gray-900">David Tan</p>
-                                    <p class="text-sm text-gray-600">Business Owner • Tan Retail Group</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <!-- Stats -->
-            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-blue-600 mb-1">480+</div>
-                    <p class="text-gray-600 text-sm">Satisfied Clients</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-blue-600 mb-1">4.9/5</div>
-                    <p class="text-gray-600 text-sm">Average Rating</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-blue-600 mb-1">99%</div>
-                    <p class="text-gray-600 text-sm">Repeat Business</p>
                 </div>
             </div>
         </div>
     </section>
-
-</main>
+</div>
 
 <?php get_footer(); ?>

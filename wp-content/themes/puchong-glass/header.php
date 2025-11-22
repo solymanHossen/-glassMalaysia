@@ -1,166 +1,80 @@
-<!doctype html>
-<html <?php language_attributes(); ?> class="scroll-smooth">
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
 <head>
-	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="profile" href="https://gmpg.org/xfn/11">
-    <meta name="description" content="<?php bloginfo('description'); ?>">
-	<?php wp_head(); ?>
-</head>
-
-<body <?php body_class( 'font-sans antialiased text-gray-900 bg-gray-50' ); ?>>
-<?php wp_body_open(); ?>
-
-<header id="main-header" class="fixed w-full top-0 z-50 glass border-b border-gray-200 transition-all duration-300">
-    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <!-- Logo -->
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-2 smooth-transition hover:opacity-75">
-            <?php if ( has_custom_logo() ) : ?>
-                <?php the_custom_logo(); ?>
-            <?php else : ?>
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-                    <span class="text-white font-bold text-lg">PG</span>
-                </div>
-                <span class="hidden sm:inline font-serif text-xl font-bold text-gray-900"><?php bloginfo( 'name' ); ?></span>
-            <?php endif; ?>
-        </a>
-
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center gap-8">
-            <?php
-            $nav_items = array(
-                home_url( '/' ) => __( 'Home', 'puchong-glass' ),
-                home_url( '/services/' ) => __( 'Services', 'puchong-glass' ),
-                home_url( '/project/' ) => __( 'Portfolio', 'puchong-glass' ),
-                home_url( '/about/' ) => __( 'About', 'puchong-glass' ),
-                home_url( '/contact/' ) => __( 'Contact', 'puchong-glass' ),
-            );
-            
-            if ( has_nav_menu( 'primary' ) ) {
-                wp_nav_menu( array(
-                    'theme_location' => 'primary',
-                    'container'      => false,
-                    'menu_class'     => 'flex items-center gap-8',
-                    'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-                    'link_before'    => '',
-                    'link_after'     => '',
-                    'depth'          => 2,
-                ) );
-            } else {
-                foreach ( $nav_items as $url => $label ) {
-                    $current_url = esc_url( $_SERVER['REQUEST_URI'] ?? home_url() );
-                    $is_active = ( rtrim( $current_url, '/' ) === rtrim( parse_url( $url, PHP_URL_PATH ), '/' ) ) || 
-                                 ( is_front_page() && $url === home_url( '/' ) );
-                    $active_class = $is_active ? 'text-blue-600 font-semibold' : 'text-gray-700';
-                    echo '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $active_class ) . ' text-sm font-medium smooth-transition hover:text-blue-500">' . esc_html( $label ) . '</a>';
-                }
-            }
-            ?>
-        </div>
-
-        <!-- CTA Button -->
-        <div class="hidden md:flex items-center gap-4">
-            <a href="https://wa.me/60123456789" class="px-6 py-2.5 rounded-full bg-blue-500 text-white text-sm font-semibold smooth-transition hover:bg-blue-600 hover:shadow-lg">
-                WhatsApp
-            </a>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-lg smooth-transition hover:bg-gray-200" aria-label="Toggle Menu">
-            <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200 py-4 px-4 absolute w-full shadow-lg">
-        <div class="flex flex-col gap-3">
-            <?php
-            $nav_items = array(
-                home_url( '/' ) => __( 'Home', 'puchong-glass' ),
-                home_url( '/services/' ) => __( 'Services', 'puchong-glass' ),
-                home_url( '/project/' ) => __( 'Portfolio', 'puchong-glass' ),
-                home_url( '/about/' ) => __( 'About', 'puchong-glass' ),
-                home_url( '/contact/' ) => __( 'Contact', 'puchong-glass' ),
-            );
-            
-            if ( has_nav_menu( 'primary' ) ) {
-                wp_nav_menu( array(
-                    'theme_location' => 'primary',
-                    'container'      => false,
-                    'items_wrap'     => '%3$s',
-                    'depth'          => 2,
-                ) );
-            } else {
-                foreach ( $nav_items as $url => $label ) {
-                    $current_url = esc_url( $_SERVER['REQUEST_URI'] ?? home_url() );
-                    $is_active = ( rtrim( $current_url, '/' ) === rtrim( parse_url( $url, PHP_URL_PATH ), '/' ) ) || 
-                                 ( is_front_page() && $url === home_url( '/' ) );
-                    $active_class = $is_active ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700';
-                    echo '<a href="' . esc_url( $url ) . '" class="px-4 py-2 ' . esc_attr( $active_class ) . ' text-sm font-medium smooth-transition hover:text-blue-500 rounded-lg">' . esc_html( $label ) . '</a>';
-                }
-            }
-            ?>
-            <a href="https://wa.me/60123456789" class="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold text-center smooth-transition hover:bg-blue-600">
-                WhatsApp
-            </a>
-        </div>
-    </div>
-</header>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mobile Menu Toggle
-        const btn = document.getElementById('mobile-menu-toggle');
-        const menu = document.getElementById('mobile-menu');
-        const icon = btn.querySelector('i');
-
-        btn.addEventListener('click', function() {
-            menu.classList.toggle('hidden');
-            if (menu.classList.contains('hidden')) {
-                icon.setAttribute('data-lucide', 'menu');
-            } else {
-                icon.setAttribute('data-lucide', 'x');
-            }
-            lucide.createIcons();
-        });
-
-        // Header scroll effect
-        const header = document.getElementById('main-header');
-        let lastScroll = 0;
-
-        window.addEventListener('scroll', function() {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 100) {
-                header.classList.add('shadow-lg');
-                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-            } else {
-                header.classList.remove('shadow-lg');
-                header.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
-            }
-            
-            lastScroll = currentScroll;
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href !== '#' && href.length > 1) {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        const headerOffset = 80;
-                        const elementPosition = target.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
+    <meta charset="<?php bloginfo( 'charset' ); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php wp_head(); ?>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0A2342',
+                        'primary-light': '#1E5A8E',
+                        accent: '#D4AF37',
+                        'accent-light': '#F4E5C2',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Sora', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
                     }
                 }
-            });
-        });
-    });
-</script>
+            }
+        }
+    </script>
+</head>
+<body <?php body_class( 'bg-white text-gray-800 font-sans' ); ?>>
+
+<nav class="fixed w-full z-50 bg-[#0A2342]/95 backdrop-blur shadow-lg py-4 transition-all">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+        <a href="<?php echo home_url(); ?>" class="flex items-center space-x-2 text-white cursor-pointer">
+            <div class="w-10 h-10 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-[#0A2342] text-xl">P</div>
+            <div class="leading-tight">
+                <h1 class="font-bold text-lg uppercase tracking-wide">Puchong Glass</h1>
+                <p class="text-[10px] text-gray-300 tracking-wider">ALUMINIUM & GRILL</p>
+            </div>
+        </a>
+        
+        <div class="hidden md:flex space-x-8 text-sm font-medium text-white/90">
+            <?php
+            wp_nav_menu( array(
+                'theme_location' => 'primary',
+                'container' => false,
+                'menu_class' => 'flex space-x-8',
+                'items_wrap' => '%3$s',
+                'link_before' => '',
+                'link_after' => '',
+                'walker' => new Walker_Nav_Menu(), // Default walker is fine, we just need classes
+                // We might need a custom walker to add specific classes or just use JS to add classes
+            ) );
+            ?>
+            <!-- Hardcoded links if menu not set, matching React structure -->
+            <?php if ( ! has_nav_menu( 'primary' ) ) : ?>
+                <a href="<?php echo home_url(); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">Home</a>
+                <a href="<?php echo home_url('/services'); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">Services</a>
+                <a href="<?php echo home_url('/portfolio'); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">Portfolio</a>
+                <a href="<?php echo home_url('/visualizer'); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">3D Preview</a>
+                <a href="<?php echo home_url('/contact'); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">Contact</a>
+            <?php endif; ?>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button onclick="openQuote()" class="hidden md:flex px-5 py-2 bg-[#D4AF37] hover:bg-[#b8962e] text-[#0A2342] font-bold rounded transition-transform hover:scale-105 items-center">Get Quote</button>
+            <button class="md:hidden text-white" id="mobile-menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[#0A2342] border-t border-white/10 p-6 flex flex-col space-y-4 md:hidden shadow-xl animate-in">
+        <a href="<?php echo home_url(); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">Home</a>
+        <a href="<?php echo home_url('/services'); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">Services</a>
+        <a href="<?php echo home_url('/portfolio'); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">Portfolio</a>
+        <a href="<?php echo home_url('/visualizer'); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">3D Preview</a>
+        <a href="<?php echo home_url('/contact'); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">Contact</a>
+        <button onclick="openQuote()" class="w-full py-4 bg-[#D4AF37] text-[#0A2342] font-bold rounded mt-2">Get Instant Quote</button>
+    </div>
+</nav>
+<main class="flex-grow min-h-screen bg-white pt-20">

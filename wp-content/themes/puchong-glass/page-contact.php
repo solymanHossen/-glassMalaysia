@@ -1,172 +1,122 @@
 <?php
-/**
- * Template Name: Contact Page
- */
-
+/* Template Name: Contact Page */
 get_header();
 ?>
 
-<main class="min-h-screen bg-gradient-to-b from-white to-gray-50">
-
-    <!-- Hero -->
-    <section class="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto text-center">
-            <h1 class="font-serif text-5xl sm:text-6xl font-bold text-gray-900 mb-4">
-                Get in Touch
-            </h1>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Have a question or ready to start your project? Reach out to our team today.
-            </p>
+<div class="pt-24 pb-20 animate-in bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12 animate-in">
+            <h4 class="font-bold tracking-widest text-sm mb-2 text-[#0A2342]">GET IN TOUCH</h4>
+            <h2 class="text-3xl md:text-5xl font-bold text-[#0A2342]">Start Your Project</h2>
+            <div class="w-20 h-1 mx-auto mt-4 rounded bg-[#0A2342]"></div>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                <!-- Contact Info -->
-                <div class="space-y-6">
-                    <div>
-                        <h3 class="font-serif text-2xl font-bold text-gray-900 mb-6">Contact Information</h3>
-                    </div>
-
-                    <div class="glass p-6 rounded-xl border border-gray-200">
-                        <div class="flex gap-4">
-                            <i data-lucide="phone" class="text-blue-500 w-6 h-6 flex-shrink-0 mt-1"></i>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-1">Phone</h4>
-                                <p class="text-gray-600 text-sm">+60 12-345 6789</p>
-                                <p class="text-gray-600 text-sm">+60 12-345 6790</p>
-                            </div>
+        
+        <div class="grid lg:grid-cols-5 gap-8 lg:gap-12">
+            
+            <!-- LEFT COLUMN: CONTACT FORM -->
+            <div class="lg:col-span-2 order-2 lg:order-1">
+                <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 h-full flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/10 rounded-bl-full -mr-8 -mt-8"></div>
+                    
+                    <h3 class="text-2xl font-bold text-[#0A2342] mb-2">Send a Message</h3>
+                    <p class="text-gray-500 mb-8">Fill out the form below and our team will get back to you within 24 hours.</p>
+                    
+                    <form class="space-y-5 flex-grow" onsubmit="event.preventDefault(); alert('Message sent!');">
+                        <div>
+                            <label class="text-xs font-bold text-[#0A2342] uppercase tracking-wider mb-1 block">Full Name</label>
+                            <input type="text" placeholder="e.g. John Doe" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
                         </div>
-                    </div>
-
-                    <div class="glass p-6 rounded-xl border border-gray-200">
-                        <div class="flex gap-4">
-                            <i data-lucide="mail" class="text-blue-500 w-6 h-6 flex-shrink-0 mt-1"></i>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-1">Email</h4>
-                                <p class="text-gray-600 text-sm">hello@puchongglass.com</p>
-                                <p class="text-gray-600 text-sm">sales@puchongglass.com</p>
-                            </div>
+                        
+                        <div>
+                            <label class="text-xs font-bold text-[#0A2342] uppercase tracking-wider mb-1 block">Phone Number</label>
+                            <input type="tel" placeholder="+60 12-345 6789" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
                         </div>
-                    </div>
-
-                    <div class="glass p-6 rounded-xl border border-gray-200">
-                        <div class="flex gap-4">
-                            <i data-lucide="map-pin" class="text-blue-500 w-6 h-6 flex-shrink-0 mt-1"></i>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-1">Location</h4>
-                                <p class="text-gray-600 text-sm">Puchong, Selangor 58000</p>
-                                <p class="text-gray-600 text-sm">Malaysia</p>
-                            </div>
+                        
+                        <div>
+                            <label class="text-xs font-bold text-[#0A2342] uppercase tracking-wider mb-1 block">Email Address</label>
+                            <input type="email" placeholder="name@example.com" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
                         </div>
-                    </div>
-
-                    <div class="glass p-6 rounded-xl border border-gray-200">
-                        <div class="flex gap-4">
-                            <i data-lucide="clock" class="text-blue-500 w-6 h-6 flex-shrink-0 mt-1"></i>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-1">Business Hours</h4>
-                                <p class="text-gray-600 text-sm">Mon - Fri: 8:00 AM - 6:00 PM</p>
-                                <p class="text-gray-600 text-sm">Sat: 9:00 AM - 3:00 PM</p>
-                                <p class="text-gray-600 text-sm">Sun: Closed</p>
-                            </div>
+                        
+                        <div>
+                            <label class="text-xs font-bold text-[#0A2342] uppercase tracking-wider mb-1 block">Message</label>
+                            <textarea rows="4" placeholder="Tell us about your renovation needs..." class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium resize-none"></textarea>
                         </div>
+                        
+                        <button type="submit" class="w-full py-4 bg-[#0A2342] text-white font-bold rounded-xl hover:bg-[#1E5A8E] transition-all shadow-lg hover:shadow-[#0A2342]/30 flex items-center justify-center group">
+                            Send Message <i data-lucide="arrow-right" class="ml-2 group-hover:translate-x-1 transition-transform w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: MAP & INFO -->
+            <div class="lg:col-span-3 order-1 lg:order-2 flex flex-col gap-6">
+                
+                <!-- INFO CARDS -->
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-[#0A2342] text-white p-6 rounded-2xl shadow-lg flex flex-col items-center text-center hover:-translate-y-1 transition-transform duration-300 cursor-default">
+                        <div class="w-12 h-12 bg-[#D4AF37] rounded-full flex items-center justify-center text-[#0A2342] mb-4 shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+                            <i data-lucide="phone" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-lg mb-1">Call Us</h4>
+                        <p class="text-[#D4AF37] font-mono-nums font-bold text-lg">+60 12-345 6789</p>
+                        <p class="text-gray-400 text-xs mt-1">Mon-Sat, 9am-6pm</p>
                     </div>
 
-                    <!-- Quick Links -->
-                    <div class="pt-4 space-y-2">
-                        <a href="https://wa.me/60123456789" class="block w-full px-6 py-3 rounded-lg bg-green-500 text-white font-semibold text-center smooth-transition hover:bg-green-600">
-                            Chat on WhatsApp
-                        </a>
+                    <div onclick="window.open('https://wa.me/60123456789', '_blank')" class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 flex flex-col items-center text-center hover:-translate-y-1 transition-transform duration-300 cursor-pointer group">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-[#0A2342] mb-4 group-hover:bg-[#0A2342] group-hover:text-[#D4AF37] transition-colors">
+                            <i data-lucide="message-circle" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-[#0A2342] text-lg mb-1">WhatsApp</h4>
+                        <p class="text-gray-600">Fast Response</p>
+                        <span class="text-[#0A2342] text-xs mt-2 font-bold border-b border-[#D4AF37]">Chat Now</span>
+                    </div>
+
+                    <div onclick="window.open('https://maps.google.com?q=Puchong+Glass+Aluminium', '_blank')" class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 flex flex-col items-center text-center hover:-translate-y-1 transition-transform duration-300 cursor-pointer group">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-[#0A2342] mb-4 group-hover:bg-[#0A2342] group-hover:text-[#D4AF37] transition-colors">
+                            <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-[#0A2342] text-lg mb-1">Showroom</h4>
+                        <p class="text-gray-600 text-sm">Taman Perindustrian Puchong</p>
+                        <span class="text-[#0A2342] text-xs mt-2 font-bold border-b border-[#D4AF37]">View on Map</span>
                     </div>
                 </div>
 
-                <!-- Contact Form -->
-                <div class="lg:col-span-2">
-                    <div class="glass p-8 rounded-xl border border-gray-200">
-                        <h3 class="font-serif text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
+                <!-- MAP CONTAINER -->
+                <div id="map" class="relative flex-grow min-h-[450px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white group">
+                    <!-- Google Map Iframe - pointing to Puchong Glass coordinates -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.086362837956!2d101.5832606!3d2.9913691!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cdb3b2e9ade33b%3A0x47f0779bbd297c10!2sPuchong%20Glass%20Aluminium%20and%20Grill!5e0!3m2!1sen!2smy!4v1700000000000!5m2!1sen!2smy" 
+                        width="100%" 
+                        height="100%" 
+                        style="border: 0; filter: grayscale(10%) contrast(1.1);" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        class="group-hover:filter-none transition-all duration-700"
+                        title="Google Map Location"
+                    ></iframe>
 
-                        <?php if (isset($_GET['success']) && $_GET['success'] == '1') : ?>
-                            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                                <div class="flex gap-3">
-                                    <i data-lucide="check-circle" class="text-green-600 w-5 h-5 flex-shrink-0 mt-0.5"></i>
-                                    <div>
-                                        <h4 class="font-semibold text-green-900 mb-1">Message Sent Successfully!</h4>
-                                        <p class="text-sm text-green-700">Thank you for contacting us. We'll get back to you shortly.</p>
-                                    </div>
-                                </div>
+                    <!-- Map Overlay Badge -->
+                    <div class="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-xl max-w-xs animate-in border border-gray-100">
+                        <div class="flex items-start gap-3">
+                            <div class="bg-[#0A2342] p-2.5 rounded-lg text-[#D4AF37] shrink-0">
+                                <i data-lucide="map-pin" class="w-5 h-5"></i>
                             </div>
-                        <?php endif; ?>
-
-                        <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" class="space-y-4" id="contact-form">
-                            <input type="hidden" name="action" value="contact_form">
-                            <?php wp_nonce_field('contact_form_submit', 'contact_form_nonce'); ?>
-                            
                             <div>
-                                <label class="block text-sm font-semibold text-gray-900 mb-2">Full Name *</label>
-                                <input type="text" required name="name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 smooth-transition" placeholder="Your name" />
+                                <p class="font-bold text-[#0A2342] text-sm leading-tight mb-1">Puchong Glass Aluminium & Grill</p>
+                                <p class="text-[11px] text-gray-500 leading-relaxed">No. 15, Jalan TPP 1/3, Taman Perindustrian Puchong, 47100 Selangor.</p>
+                                <button onclick="window.open('https://maps.google.com?q=Puchong+Glass+Aluminium', '_blank')" class="text-[10px] font-bold text-[#D4AF37] mt-2 uppercase tracking-wide flex items-center hover:underline">
+                                    Get Directions <i data-lucide="chevron-right" class="w-3 h-3 ml-1"></i>
+                                </button>
                             </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-900 mb-2">Email *</label>
-                                    <input type="email" required name="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 smooth-transition" placeholder="your@email.com" />
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-900 mb-2">Phone *</label>
-                                    <input type="tel" required name="phone" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 smooth-transition" placeholder="+60 12-345 6789" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-900 mb-2">Service Interest</label>
-                                <select name="service" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 smooth-transition">
-                                    <option value="">Select a service</option>
-                                    <?php
-                                    $services_query = new WP_Query(array('post_type' => 'service', 'posts_per_page' => -1));
-                                    if ($services_query->have_posts()) :
-                                        while ($services_query->have_posts()) : $services_query->the_post();
-                                            echo '<option value="' . esc_attr(get_the_title()) . '">' . esc_html(get_the_title()) . '</option>';
-                                        endwhile;
-                                        wp_reset_postdata();
-                                    else:
-                                        echo '<option value="Glass Installation">Glass Installation</option>';
-                                        echo '<option value="Aluminium Work">Aluminium Work</option>';
-                                        echo '<option value="Grill Installation">Grill Installation</option>';
-                                        echo '<option value="Other">Other</option>';
-                                    endif;
-                                    ?>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-900 mb-2">Message *</label>
-                                <textarea required name="message" rows="6" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none smooth-transition" placeholder="Tell us about your project..."></textarea>
-                            </div>
-
-                            <button type="submit" class="w-full px-6 py-3 rounded-lg bg-blue-500 text-white font-semibold smooth-transition hover:bg-blue-600 hover:shadow-lg flex items-center justify-center gap-2">
-                                <span>Send Message</span>
-                                <i data-lucide="send" class="w-5 h-5"></i>
-                            </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
-    </section>
-
-    <!-- Map Section -->
-    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="font-serif text-4xl font-bold text-gray-900 mb-12 text-center">Find Us on the Map</h2>
-            <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-lg h-96">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.1487169644444!2d101.5753!3d2.9264!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cdced8c3bf9999%3A0x1234567890!2sPuchong%2C%20Selangor!5e0!3m2!1sen!2smy!4v1234567890" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-        </div>
-    </section>
-
-</main>
+    </div>
+</div>
 
 <?php get_footer(); ?>

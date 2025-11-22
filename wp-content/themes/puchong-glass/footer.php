@@ -1,166 +1,104 @@
-<footer class="bg-gray-900 text-gray-100 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            <!-- Brand -->
-            <div>
-                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-2 mb-4">
-                    <div class="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center">
-                        <span class="text-white font-bold">PG</span>
-                    </div>
-                    <span class="font-serif text-lg font-bold">Puchong Glass</span>
-                </a>
-                <p class="text-gray-400 text-sm mb-4">
-                    Premium glass, aluminium, and grill solutions for residential and commercial projects.
-                </p>
-                <div class="flex gap-3">
-                    <a href="#" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center smooth-transition hover:bg-blue-500" aria-label="Facebook">
-                        <i data-lucide="facebook" class="w-4 h-4"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center smooth-transition hover:bg-blue-500" aria-label="Instagram">
-                        <i data-lucide="instagram" class="w-4 h-4"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center smooth-transition hover:bg-blue-500" aria-label="LinkedIn">
-                        <i data-lucide="linkedin" class="w-4 h-4"></i>
-                    </a>
-                </div>
-            </div>
+</main>
 
-            <!-- Quick Links -->
-            <div>
-                <h4 class="font-semibold text-white mb-4">Quick Links</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="<?php echo home_url('/'); ?>" class="text-gray-400 smooth-transition hover:text-blue-400">Home</a></li>
-                    <li><a href="<?php echo home_url('/services'); ?>" class="text-gray-400 smooth-transition hover:text-blue-400">Services</a></li>
-                    <li><a href="<?php echo home_url('/portfolio'); ?>" class="text-gray-400 smooth-transition hover:text-blue-400">Portfolio</a></li>
-                    <li><a href="<?php echo home_url('/about'); ?>" class="text-gray-400 smooth-transition hover:text-blue-400">About Us</a></li>
-                </ul>
+<footer class="bg-[#0A2342] text-white pt-16 pb-8 border-t border-white/10">
+    <div class="container mx-auto px-4 grid md:grid-cols-4 gap-12 mb-12">
+        <div>
+            <div class="flex items-center space-x-2 mb-6">
+                <div class="w-8 h-8 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-[#0A2342]">P</div>
+                <span class="font-bold text-lg uppercase">Puchong Glass</span>
             </div>
+            <p class="text-gray-400 text-sm leading-relaxed">Premium glass & aluminium specialists serving Selangor since 2003.</p>
+        </div>
+        <div>
+            <h4 class="font-bold mb-6">Explore</h4>
+            <ul class="space-y-3 text-gray-400 text-sm">
+                <li><a href="<?php echo home_url(); ?>" class="hover:text-[#D4AF37]">Home</a></li>
+                <li><a href="<?php echo home_url('/services'); ?>" class="hover:text-[#D4AF37]">Services</a></li>
+                <li><a href="<?php echo home_url('/portfolio'); ?>" class="hover:text-[#D4AF37]">Portfolio</a></li>
+                <li><a href="<?php echo home_url('/contact'); ?>" class="hover:text-[#D4AF37]">Contact</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold mb-6">Services</h4>
+            <ul class="space-y-3 text-gray-400 text-sm">
+                <?php
+                $services = new WP_Query( array( 'post_type' => 'service', 'posts_per_page' => 4 ) );
+                if ( $services->have_posts() ) :
+                    while ( $services->have_posts() ) : $services->the_post();
+                        ?>
+                        <li><a href="<?php the_permalink(); ?>" class="hover:text-[#D4AF37]"><?php the_title(); ?></a></li>
+                        <?php
+                    endwhile;
+                    wp_reset_postdata();
+                endif;
+                ?>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold mb-6">Contact</h4>
+            <ul class="space-y-3 text-gray-400 text-sm">
+                <li><i data-lucide="map-pin" class="inline mr-2 text-[#D4AF37] w-4 h-4"></i> Puchong, Selangor</li>
+                <li><i data-lucide="phone" class="inline mr-2 text-[#D4AF37] w-4 h-4"></i> +60 12-345 6789</li>
+            </ul>
+        </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 border-t border-white/10 pt-8">&copy; <?php echo date('Y'); ?> Puchong Glass Aluminium & Grill. All rights reserved.</div>
+</footer>
 
-            <!-- Services -->
-            <div>
-                <h4 class="font-semibold text-white mb-4">Services</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="<?php echo home_url('/services#glass'); ?>" class="text-gray-400 smooth-transition hover:text-blue-400">Glass Installation</a></li>
-                    <li><a href="<?php echo home_url('/services#aluminium'); ?>" class="text-gray-400 smooth-transition hover:text-blue-400">Aluminium Work</a></li>
-                    <li><a href="<?php echo home_url('/services#grill'); ?>" class="text-gray-400 smooth-transition hover:text-blue-400">Grill Installation</a></li>
-                    <li><a href="<?php echo home_url('/services#fabrication'); ?>" class="text-gray-400 smooth-transition hover:text-blue-400">Custom Fabrication</a></li>
-                </ul>
+<!-- Floating Actions -->
+<div class="fixed bottom-6 right-6 flex flex-col gap-4 z-40 animate-in">
+    <a href="https://wa.me/60123456789" target="_blank" class="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform hover:shadow-green-500/30 group relative" title="WhatsApp Us">
+        <i data-lucide="message-circle" class="w-7 h-7"></i>
+        <span class="absolute right-full mr-4 bg-white text-gray-800 px-3 py-1 rounded shadow text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Chat Now</span>
+    </a>
+    <a href="tel:+60123456789" class="w-14 h-14 bg-[#0A2342] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform hover:shadow-[#0A2342]/40 group relative" title="Call Now">
+        <i data-lucide="phone" class="w-6 h-6"></i>
+        <span class="absolute right-full mr-4 bg-white text-gray-800 px-3 py-1 rounded shadow text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Call Us</span>
+    </a>
+</div>
+
+<!-- Quote Modal -->
+<div id="quote-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeQuote()"></div>
+    <div class="bg-white rounded-2xl w-full max-w-xl relative z-10 overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in">
+        <div class="bg-[#0A2342] p-6 text-white flex justify-between items-center">
+            <h3 class="text-xl font-bold">Instant Quote Estimator</h3>
+            <button onclick="closeQuote()" class="hover:bg-white/10 p-2 rounded-full"><i data-lucide="x"></i></button>
+        </div>
+        <div class="p-8 space-y-6 overflow-y-auto" id="quote-step-1">
+            <h4 class="font-bold text-[#0A2342]">Select Service</h4>
+            <div class="grid grid-cols-2 gap-3" id="quote-services-list">
+                <!-- Populated by JS -->
             </div>
-
-            <!-- Contact -->
-            <div>
-                <h4 class="font-semibold text-white mb-4">Contact</h4>
-                <div class="space-y-3 text-sm">
-                    <div class="flex gap-3">
-                        <i data-lucide="phone" class="text-blue-400 w-4 h-4 flex-shrink-0 mt-0.5"></i>
-                        <span class="text-gray-400">+60 12-345 6789</span>
-                    </div>
-                    <div class="flex gap-3">
-                        <i data-lucide="mail" class="text-blue-400 w-4 h-4 flex-shrink-0 mt-0.5"></i>
-                        <span class="text-gray-400">hello@puchongglass.com</span>
-                    </div>
-                    <div class="flex gap-3">
-                        <i data-lucide="map-pin" class="text-blue-400 w-4 h-4 flex-shrink-0 mt-0.5"></i>
-                        <span class="text-gray-400">Puchong, Selangor 58000</span>
-                    </div>
-                </div>
+            <button onclick="nextQuoteStep()" id="quote-next-btn" disabled class="w-full py-3 bg-[#D4AF37] text-[#0A2342] font-bold rounded disabled:opacity-50 mt-4">Next Step</button>
+        </div>
+        <div class="p-8 space-y-6 overflow-y-auto hidden" id="quote-step-2">
+            <h4 class="font-bold text-[#0A2342]">Dimensions (ft)</h4>
+            <div class="flex gap-4">
+                <input type="number" id="quote-width" placeholder="Width" class="w-full p-3 border rounded">
+                <input type="number" id="quote-height" placeholder="Height" class="w-full p-3 border rounded">
+            </div>
+            <select id="quote-material" class="w-full p-3 border rounded mt-4">
+                <option value="Standard">Standard Grade</option>
+                <option value="Premium">Premium Grade</option>
+            </select>
+            <div class="flex gap-4 mt-6">
+                <button onclick="prevQuoteStep()" class="w-1/3 py-3 border font-bold rounded">Back</button>
+                <button onclick="calculateQuote()" class="w-2/3 py-3 bg-[#0A2342] text-white font-bold rounded">Calculate</button>
             </div>
         </div>
-
-        <!-- Divider -->
-        <div class="border-t border-gray-800 pt-8">
-            <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-                <p>&copy; <?php echo date('Y'); ?> Puchong Glass & Aluminium. All rights reserved.</p>
-                <div class="flex gap-6 mt-4 md:mt-0">
-                    <a href="#" class="smooth-transition hover:text-blue-400">Privacy Policy</a>
-                    <a href="#" class="smooth-transition hover:text-blue-400">Terms of Service</a>
-                </div>
+        <div class="p-8 space-y-6 overflow-y-auto hidden" id="quote-step-3">
+            <div class="text-center">
+                <div class="text-gray-500 mb-2">Estimated Cost</div>
+                <div class="text-5xl font-bold text-[#D4AF37] font-mono-nums mb-6">RM <span id="quote-result">0.00</span></div>
+                <button onclick="sendQuoteWhatsapp()" class="w-full py-4 bg-green-500 text-white font-bold rounded flex items-center justify-center gap-2 hover:bg-green-600">
+                    <i data-lucide="message-circle"></i> Send to WhatsApp
+                </button>
             </div>
         </div>
     </div>
-</footer>
+</div>
 
 <?php wp_footer(); ?>
-
-<script>
-// Scroll reveal animation
-function reveal() {
-    const reveals = document.querySelectorAll('.reveal');
-    
-    reveals.forEach(element => {
-        const windowHeight = window.innerHeight;
-        const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = 150;
-        
-        if (elementTop < windowHeight - elementVisible) {
-            element.classList.add('active');
-        }
-    });
-}
-
-window.addEventListener('scroll', reveal);
-reveal(); // Check on load
-
-// Form submission handling
-const contactForm = document.getElementById('contact-form');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        const button = this.querySelector('button[type="submit"]');
-        button.classList.add('loading');
-        button.disabled = true;
-    });
-}
-
-// Add intersection observer for animations
-if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    });
-
-    document.querySelectorAll('.glass, .interactive-card').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-        observer.observe(el);
-    });
-}
-
-// Back to top button
-const backToTop = document.createElement('button');
-backToTop.innerHTML = '<i data-lucide="arrow-up" class="w-5 h-5"></i>';
-backToTop.className = 'fixed bottom-8 right-8 w-12 h-12 rounded-full bg-blue-500 text-white shadow-lg smooth-transition hover:bg-blue-600 hover:shadow-xl z-40 hidden items-center justify-center';
-backToTop.setAttribute('aria-label', 'Back to top');
-document.body.appendChild(backToTop);
-
-window.addEventListener('scroll', function() {
-    if (window.pageYOffset > 300) {
-        backToTop.classList.remove('hidden');
-        backToTop.classList.add('flex');
-    } else {
-        backToTop.classList.add('hidden');
-        backToTop.classList.remove('flex');
-    }
-});
-
-backToTop.addEventListener('click', function() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-});
-
-// Initialize Lucide icons after dynamic content
-if (typeof lucide !== 'undefined') {
-    lucide.createIcons();
-}
-</script>
 </body>
 </html>
