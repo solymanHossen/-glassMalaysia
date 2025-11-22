@@ -45,6 +45,22 @@ function pg_register_cpts() {
         'rewrite' => array( 'slug' => 'portfolio' ),
         'show_in_rest' => true,
     ));
+
+    // Testimonials
+    register_post_type( 'testimonial', array(
+        'labels' => array(
+            'name' => 'Testimonials',
+            'singular_name' => 'Testimonial',
+            'add_new' => 'Add New Testimonial',
+            'add_new_item' => 'Add New Testimonial',
+            'edit_item' => 'Edit Testimonial',
+        ),
+        'public' => false, // Not public on frontend as single pages
+        'show_ui' => true,
+        'menu_icon' => 'dashicons-format-quote',
+        'supports' => array( 'title', 'editor', 'thumbnail' ), // Title = Name, Editor = Quote
+        'show_in_rest' => true,
+    ));
 }
 add_action( 'init', 'pg_register_cpts' );
 
@@ -67,6 +83,8 @@ function pg_add_meta_boxes() {
     add_meta_box( 'pg_service_meta', 'Service Details', 'pg_render_service_meta', 'service', 'normal', 'high' );
     // Portfolio Meta
     add_meta_box( 'pg_portfolio_meta', 'Project Details', 'pg_render_portfolio_meta', 'portfolio', 'normal', 'high' );
+    // Testimonial Meta
+    add_meta_box( 'pg_testimonial_meta', 'Testimonial Details', 'pg_render_testimonial_meta', 'testimonial', 'normal', 'high' );
 }
 add_action( 'add_meta_boxes', 'pg_add_meta_boxes' );
 
@@ -123,6 +141,23 @@ function pg_render_portfolio_meta( $post ) {
     <?php
 }
 
+function pg_render_testimonial_meta( $post ) {
+    $role = get_post_meta( $post->ID, '_pg_role', true );
+    $rating = get_post_meta( $post->ID, '_pg_rating', true ) ?: 5;
+
+    wp_nonce_field( 'pg_save_meta', 'pg_meta_nonce' );
+    ?>
+    <p>
+        <label><strong>Role / Location:</strong></label><br>
+        <input type="text" name="pg_role" value="<?php echo esc_attr( $role ); ?>" class="widefat" placeholder="e.g. Homeowner, Puchong">
+    </p>
+    <p>
+        <label><strong>Rating (1-5):</strong></label><br>
+        <input type="number" name="pg_rating" value="<?php echo esc_attr( $rating ); ?>" class="widefat" min="1" max="5">
+    </p>
+    <?php
+}
+
 function pg_save_meta( $post_id ) {
     if ( ! isset( $_POST['pg_meta_nonce'] ) || ! wp_verify_nonce( $_POST['pg_meta_nonce'], 'pg_save_meta' ) ) {
         return;
@@ -147,5 +182,9 @@ function pg_save_meta( $post_id ) {
     if ( isset( $_POST['pg_year'] ) ) update_post_meta( $post_id, '_pg_year', sanitize_text_field( $_POST['pg_year'] ) );
     if ( isset( $_POST['pg_challenge'] ) ) update_post_meta( $post_id, '_pg_challenge', sanitize_textarea_field( $_POST['pg_challenge'] ) );
     if ( isset( $_POST['pg_solution'] ) ) update_post_meta( $post_id, '_pg_solution', sanitize_textarea_field( $_POST['pg_solution'] ) );
+
+    // Save Testimonial Meta
+    if ( isset( $_POST['pg_role'] ) ) update_post_meta( $post_id, '_pg_role', sanitize_text_field( $_POST['pg_role'] ) );
+    if ( isset( $_POST['pg_rating'] ) ) update_post_meta( $post_id, '_pg_rating', intval( $_POST['pg_rating'] ) );
 }
 add_action( 'save_post', 'pg_save_meta' );
