@@ -38,25 +38,14 @@
         
         <div class="hidden md:flex space-x-8 text-sm font-medium text-white/90">
             <?php
-            wp_nav_menu( array(
-                'theme_location' => 'primary',
-                'container' => false,
-                'menu_class' => 'flex space-x-8',
-                'items_wrap' => '%3$s',
-                'link_before' => '',
-                'link_after' => '',
-                'walker' => new Walker_Nav_Menu(), // Default walker is fine, we just need classes
-                // We might need a custom walker to add specific classes or just use JS to add classes
-            ) );
+            $base_class = "hover:text-[#D4AF37] transition-colors uppercase tracking-wider";
+            $active_class = "text-[#D4AF37]";
             ?>
-            <!-- Hardcoded links if menu not set, matching React structure -->
-            <?php if ( ! has_nav_menu( 'primary' ) ) : ?>
-                <a href="<?php echo home_url(); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">Home</a>
-                <a href="<?php echo home_url('/services'); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">Services</a>
-                <a href="<?php echo home_url('/portfolio'); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">Portfolio</a>
-                <a href="<?php echo home_url('/visualizer'); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">3D Preview</a>
-                <a href="<?php echo home_url('/contact'); ?>" class="hover:text-[#D4AF37] transition-colors uppercase tracking-wider">Contact</a>
-            <?php endif; ?>
+            <a href="<?php echo home_url(); ?>" class="<?php echo $base_class; ?> <?php echo is_front_page() ? $active_class : ''; ?>">Home</a>
+            <a href="<?php echo home_url('/services'); ?>" class="<?php echo $base_class; ?> <?php echo (is_post_type_archive('service') || is_singular('service')) ? $active_class : ''; ?>">Services</a>
+            <a href="<?php echo home_url('/portfolio'); ?>" class="<?php echo $base_class; ?> <?php echo (is_post_type_archive('portfolio') || is_singular('portfolio') || is_tax('portfolio_category')) ? $active_class : ''; ?>">Portfolio</a>
+            <a href="<?php echo home_url('/visualizer'); ?>" class="<?php echo $base_class; ?> <?php echo is_page('visualizer') ? $active_class : ''; ?>">3D Preview</a>
+            <a href="<?php echo home_url('/contact'); ?>" class="<?php echo $base_class; ?> <?php echo is_page('contact') ? $active_class : ''; ?>">Contact</a>
         </div>
 
         <div class="flex items-center gap-4">
@@ -69,11 +58,15 @@
 
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[#0A2342] border-t border-white/10 p-6 flex flex-col space-y-4 md:hidden shadow-xl animate-in">
-        <a href="<?php echo home_url(); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">Home</a>
-        <a href="<?php echo home_url('/services'); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">Services</a>
-        <a href="<?php echo home_url('/portfolio'); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">Portfolio</a>
-        <a href="<?php echo home_url('/visualizer'); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">3D Preview</a>
-        <a href="<?php echo home_url('/contact'); ?>" class="text-white text-lg py-3 border-b border-white/5 text-left">Contact</a>
+        <?php
+        $m_base = "text-white text-lg py-3 border-b border-white/5 text-left block";
+        $m_active = "text-[#D4AF37]";
+        ?>
+        <a href="<?php echo home_url(); ?>" class="<?php echo $m_base; ?> <?php echo is_front_page() ? $m_active : ''; ?>">Home</a>
+        <a href="<?php echo home_url('/services'); ?>" class="<?php echo $m_base; ?> <?php echo (is_post_type_archive('service') || is_singular('service')) ? $m_active : ''; ?>">Services</a>
+        <a href="<?php echo home_url('/portfolio'); ?>" class="<?php echo $m_base; ?> <?php echo (is_post_type_archive('portfolio') || is_singular('portfolio') || is_tax('portfolio_category')) ? $m_active : ''; ?>">Portfolio</a>
+        <a href="<?php echo home_url('/visualizer'); ?>" class="<?php echo $m_base; ?> <?php echo is_page('visualizer') ? $m_active : ''; ?>">3D Preview</a>
+        <a href="<?php echo home_url('/contact'); ?>" class="<?php echo $m_base; ?> <?php echo is_page('contact') ? $m_active : ''; ?>">Contact</a>
         <button onclick="openQuote()" class="w-full py-4 bg-[#D4AF37] text-[#0A2342] font-bold rounded mt-2">Get Instant Quote</button>
     </div>
 </nav>
