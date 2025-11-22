@@ -22,6 +22,12 @@ require_once PUCHONG_GLASS_DIR . '/create-pages.php';
 // Load complete setup script
 require_once PUCHONG_GLASS_DIR . '/complete-setup.php';
 
+// Load admin panel initialization
+require_once PUCHONG_GLASS_DIR . '/admin-panel-init.php';
+
+// Load authentication system
+require_once PUCHONG_GLASS_DIR . '/admin-auth.php';
+
 /**
  * Theme setup and features
  */
@@ -363,6 +369,56 @@ function puchong_glass_validate_contact_data( $data ) {
 		'message' => $message,
 	);
 }
+
+/**
+ * Modern Admin Panel Router
+ */
+function puchong_glass_admin_panel_router() {
+	// Check if user has capability and access the admin panel URL
+	if ( current_user_can( 'manage_options' ) && isset( $_GET['puchong-admin'] ) ) {
+		require_once PUCHONG_GLASS_DIR . '/admin-panel.php';
+		exit;
+	}
+}
+add_action( 'init', 'puchong_glass_admin_panel_router', 1 );
+
+/**
+ * Add admin panel menu item
+ */
+function puchong_glass_admin_menu() {
+	add_menu_page(
+		esc_html__( 'Puchong Glass', 'puchong-glass' ),
+		esc_html__( 'Puchong Glass', 'puchong-glass' ),
+		'manage_options',
+		'puchong-admin-panel',
+		function() {
+			$_GET['puchong-admin'] = 1;
+			require_once PUCHONG_GLASS_DIR . '/admin-panel.php';
+		},
+		'dashicons-building',
+		3
+	);
+}
+add_action( 'admin_menu', 'puchong_glass_admin_menu' );
+
+/**
+ * Add custom admin panel link in WordPress admin bar
+ */
+function puchong_glass_admin_bar() {
+	global $wp_admin_bar;
+
+	if ( current_user_can( 'manage_options' ) ) {
+		$wp_admin_bar->add_menu( array(
+			'id'    => 'puchong-glass-admin',
+			'title' => esc_html__( 'Admin Panel', 'puchong-glass' ),
+			'href'  => admin_url( 'admin.php?page=puchong-admin-panel' ),
+			'meta'  => array(
+				'class' => 'puchong-admin-menu',
+			),
+		) );
+	}
+}
+add_action( 'admin_bar_menu', 'puchong_glass_admin_bar', 999 );
 
 /**
  * Handle Contact Form Submissions

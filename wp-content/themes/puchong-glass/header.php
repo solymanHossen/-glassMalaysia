@@ -29,11 +29,11 @@
         <div class="hidden md:flex items-center gap-8">
             <?php
             $nav_items = array(
-                home_url('/') => 'Home',
-                home_url('/services/') => 'Services',
-                home_url('/portfolio/') => 'Portfolio',
-                home_url('/about/') => 'About',
-                home_url('/contact/') => 'Contact',
+                home_url( '/' ) => __( 'Home', 'puchong-glass' ),
+                home_url( '/services/' ) => __( 'Services', 'puchong-glass' ),
+                home_url( '/project/' ) => __( 'Portfolio', 'puchong-glass' ),
+                home_url( '/about/' ) => __( 'About', 'puchong-glass' ),
+                home_url( '/contact/' ) => __( 'Contact', 'puchong-glass' ),
             );
             
             if ( has_nav_menu( 'primary' ) ) {
@@ -44,13 +44,15 @@
                     'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
                     'link_before'    => '',
                     'link_after'     => '',
+                    'depth'          => 2,
                 ) );
             } else {
-                foreach ($nav_items as $url => $label) {
-                    $is_active = (rtrim($_SERVER['REQUEST_URI'], '/') === rtrim(parse_url($url, PHP_URL_PATH), '/')) || 
-                                 (is_front_page() && $url === home_url('/'));
+                foreach ( $nav_items as $url => $label ) {
+                    $current_url = esc_url( $_SERVER['REQUEST_URI'] ?? home_url() );
+                    $is_active = ( rtrim( $current_url, '/' ) === rtrim( parse_url( $url, PHP_URL_PATH ), '/' ) ) || 
+                                 ( is_front_page() && $url === home_url( '/' ) );
                     $active_class = $is_active ? 'text-blue-600 font-semibold' : 'text-gray-700';
-                    echo '<a href="' . esc_url($url) . '" class="' . $active_class . ' text-sm font-medium smooth-transition hover:text-blue-500">' . esc_html($label) . '</a>';
+                    echo '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $active_class ) . ' text-sm font-medium smooth-transition hover:text-blue-500">' . esc_html( $label ) . '</a>';
                 }
             }
             ?>
@@ -73,18 +75,28 @@
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200 py-4 px-4 absolute w-full shadow-lg">
         <div class="flex flex-col gap-3">
             <?php
+            $nav_items = array(
+                home_url( '/' ) => __( 'Home', 'puchong-glass' ),
+                home_url( '/services/' ) => __( 'Services', 'puchong-glass' ),
+                home_url( '/project/' ) => __( 'Portfolio', 'puchong-glass' ),
+                home_url( '/about/' ) => __( 'About', 'puchong-glass' ),
+                home_url( '/contact/' ) => __( 'Contact', 'puchong-glass' ),
+            );
+            
             if ( has_nav_menu( 'primary' ) ) {
                 wp_nav_menu( array(
                     'theme_location' => 'primary',
                     'container'      => false,
                     'items_wrap'     => '%3$s',
+                    'depth'          => 2,
                 ) );
             } else {
-                foreach ($nav_items as $url => $label) {
-                    $is_active = (rtrim($_SERVER['REQUEST_URI'], '/') === rtrim(parse_url($url, PHP_URL_PATH), '/')) || 
-                                 (is_front_page() && $url === home_url('/'));
+                foreach ( $nav_items as $url => $label ) {
+                    $current_url = esc_url( $_SERVER['REQUEST_URI'] ?? home_url() );
+                    $is_active = ( rtrim( $current_url, '/' ) === rtrim( parse_url( $url, PHP_URL_PATH ), '/' ) ) || 
+                                 ( is_front_page() && $url === home_url( '/' ) );
                     $active_class = $is_active ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700';
-                    echo '<a href="' . esc_url($url) . '" class="px-4 py-2 ' . $active_class . ' text-sm font-medium smooth-transition hover:text-blue-500 rounded-lg">' . esc_html($label) . '</a>';
+                    echo '<a href="' . esc_url( $url ) . '" class="px-4 py-2 ' . esc_attr( $active_class ) . ' text-sm font-medium smooth-transition hover:text-blue-500 rounded-lg">' . esc_html( $label ) . '</a>';
                 }
             }
             ?>
