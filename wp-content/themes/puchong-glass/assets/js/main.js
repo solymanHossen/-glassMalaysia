@@ -18,22 +18,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Before/After Slider (Home Page)
-    const container = document.getElementById('before-after-container');
-    if (container) {
+    const sliderContainer = document.getElementById('before-after-slider');
+    if (sliderContainer) {
         const wrapper = document.getElementById('before-image-wrapper');
         const handle = document.getElementById('slider-handle');
-        
-        const move = (e) => {
-            const rect = container.getBoundingClientRect();
-            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            const pos = Math.max(0, Math.min((x / rect.width) * 100, 100));
+        let isDragging = false;
+
+        const updateSlider = (clientX) => {
+            const rect = sliderContainer.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const percent = Math.max(0, Math.min((x / rect.width) * 100, 100));
             
-            wrapper.style.clipPath = `inset(0 ${100 - pos}% 0 0)`;
-            handle.style.left = `${pos}%`;
+            wrapper.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+            handle.style.left = `${percent}%`;
         };
 
-        container.addEventListener('mousemove', move);
-        container.addEventListener('touchmove', move);
+        sliderContainer.addEventListener('mousedown', () => { isDragging = true; });
+        sliderContainer.addEventListener('mouseup', () => { isDragging = false; });
+        sliderContainer.addEventListener('mouseleave', () => { isDragging = false; });
+        
+        sliderContainer.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            updateSlider(e.clientX);
+        });
+
+        sliderContainer.addEventListener('touchmove', (e) => {
+            // Prevent scrolling while dragging
+            e.preventDefault();
+            updateSlider(e.touches[0].clientX);
+        });
     }
 
     // Quote Calculator Logic

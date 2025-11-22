@@ -115,7 +115,49 @@
             </div>
         </div>
     </section>
+  <!-- Before/After -->
+    <section id="projects" class="md:py-24 py-12 bg-slate-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12 animate-in">
+                <h4 class="font-bold tracking-widest text-sm mb-2 text-[#D4AF37]">VISUAL PROOF</h4>
+                <h2 class="text-3xl md:text-5xl font-bold text-[#0A2342]">The Transformation</h2>
+                <div class="w-20 h-1 mx-auto mt-4 rounded bg-[#0A2342]"></div>
+            </div>
 
+            <div class="w-full  mx-auto my-12 select-none" id="before-after-container">
+                <div class="text-center mb-6">
+                    <span class="text-slate-500 text-sm font-mono uppercase tracking-wider flex items-center justify-center gap-2">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i> Drag slider to compare
+                    </span>
+                </div>
+                <div 
+                    class="relative w-full h-[300px] md:h-[500px] rounded-2xl overflow-hidden cursor-ew-resize shadow-2xl border-4 border-white ring-1 ring-slate-200"
+                    id="before-after-slider"
+                >
+                    <!-- Finished Image (Background) -->
+                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2000&auto=format&fit=crop')">
+                        <div class="absolute top-4 right-4 bg-amber-500/90 backdrop-blur text-slate-900 px-4 py-1 rounded font-bold text-xs shadow-lg">FINISHED</div>
+                    </div>
+                    
+                    <!-- Construction Image (Foreground with Clip Path) -->
+                    <div 
+                        class="absolute inset-0 bg-cover bg-center"
+                        id="before-image-wrapper"
+                        style="background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2000&auto=format&fit=crop'); clip-path: inset(0 50% 0 0);"
+                    >
+                        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur text-white px-4 py-1 rounded font-bold text-xs border border-slate-700 shadow-lg">CONSTRUCTION</div>
+                    </div>
+                    
+                    <!-- Handle -->
+                    <div class="absolute top-0 bottom-0 w-1 bg-amber-500 cursor-ew-resize z-10 shadow-[0_0_20px_rgba(245,158,11,0.8)]" id="slider-handle" style="left: 50%">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-slate-900 border-2 border-amber-500 rounded-full flex items-center justify-center shadow-xl">
+                            <i data-lucide="maximize-2" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <!-- Testimonials -->
     <section class="md:py-24 py-12 bg-[#0A2342] relative overflow-hidden">
         <!-- Decorative Background Elements -->
@@ -214,31 +256,49 @@
         </div>
     </section>
 
-    <!-- Before/After -->
-    <section class="py-24 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <div class="text-center md:text-left mb-12 animate-in">
-                        <h4 class="font-bold tracking-widest text-sm mb-2 text-[#0A2342]">TRANSFORMATION</h4>
-                        <h2 class="text-3xl md:text-5xl font-bold text-[#0A2342]">See the Difference</h2>
-                        <div class="w-20 h-1 mx-auto md:mx-0 mt-4 rounded bg-[#0A2342]"></div>
+  
+
+    <!-- Location -->
+    <section id="location" class="py-0 bg-slate-900 relative">
+        <div class="h-[500px] w-full relative filter grayscale contrast-125 hover:filter-none transition-all duration-700 group">
+            <!-- Google Map Iframe -->
+            <iframe 
+                title="Master Home Services Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.146627842453!2d101.5933243758562!3d3.0554063537251226!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc4b4117755555%3A0x78961234567890!2sPuchong%2C%20Selangor!5e0!3m2!1sen!2smy!4v1708500000000!5m2!1sen!2smy" 
+                width="100%" 
+                height="100%" 
+                style="border: 0;" 
+                allowfullscreen="" 
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                class="w-full h-full bg-slate-800 map-filter"
+            ></iframe>
+          
+            <!-- Floating Location Card -->
+            <div class="absolute top-1/2 left-6 right-6 md:left-auto md:right-24 md:w-96 -translate-y-1/2 bg-slate-900/90 backdrop-blur-xl p-8 rounded-2xl border border-slate-700 shadow-2xl z-10">
+                <h3 class="text-2xl font-bold text-white mb-6">Visit the Factory</h3>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4">
+                        <i data-lucide="map-pin" class="w-6 h-6 text-amber-500 flex-shrink-0 mt-1"></i>
+                        <div>
+                            <p class="text-slate-300 font-medium">Lot 13, Bt 13, Jalan Jurutera</p>
+                            <p class="text-slate-500 text-sm">Kampung Seri Aman, 47100 Puchong</p>
+                        </div>
                     </div>
-                    <p class="text-gray-600 mb-6">Drag the slider to reveal the quality of our workmanship.</p>
-                </div>
-                <div id="before-after-container" class="relative h-[400px] rounded-2xl overflow-hidden cursor-col-resize select-none shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover" />
-                    <div class="absolute top-4 right-4 bg-[#D4AF37] px-3 py-1 font-bold text-xs rounded z-20">AFTER</div>
-                    <div id="before-image-wrapper" class="absolute inset-0 w-full h-full overflow-hidden" style="clip-path: inset(0 50% 0 0);">
-                        <img src="https://images.unsplash.com/photo-1594498653385-d5172c532c00?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover" />
-                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 font-bold text-xs rounded z-20">BEFORE</div>
-                    </div>
-                    <div id="slider-handle" class="absolute top-0 bottom-0 w-1 bg-white cursor-col-resize z-30" style="left: 50%;">
-                        <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 bg-white w-8 h-8 rounded-full shadow flex items-center justify-center text-[#0A2342]">
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    
+                    <div class="flex items-start gap-4">
+                        <i data-lucide="phone" class="w-6 h-6 text-amber-500 flex-shrink-0 mt-1"></i>
+                        <div>
+                            <p class="text-slate-300 font-medium">+60 11-2447 4500</p>
+                            <p class="text-slate-500 text-sm">Mon-Sat, 9am - 6pm</p>
                         </div>
                     </div>
                 </div>
+
+                <button class="w-full mt-8 px-6 py-3 bg-[#D4AF37] hover:bg-[#b8962e] text-[#0A2342] font-bold rounded-lg transition-all" onclick="window.open('https://waze.com/ul?q=Puchong', '_blank')">
+                    Navigate with Waze
+                </button>
             </div>
         </div>
     </section>
