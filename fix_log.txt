@@ -1,0 +1,15 @@
+Issues found:
+1. Conflict between Pages and Custom Post Type Archives.
+   - Page 'Services' (slug: services) conflicted with CPT 'service' archive (slug: services).
+   - Page 'Portfolio' (slug: portfolio) conflicted with CPT 'portfolio' archive (slug: portfolio).
+   - These pages were empty, causing the site to display empty pages instead of the archives.
+2. Permalinks were not flushed, causing single detail pages to 404 (not route).
+
+Fixes applied:
+1. Renamed Page 'Services' to 'services-conflict'.
+2. Renamed Page 'Portfolio' to 'portfolio-conflict'.
+3. Flushed rewrite rules (permalinks).
+
+Verification:
+- Archives should now load `archive-service.php` and `archive-portfolio.php`.
+- Single pages should now route to `single-service.php` and `single-portfolio.php`.

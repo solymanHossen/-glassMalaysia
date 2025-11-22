@@ -3,7 +3,6 @@
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php wp_head(); ?>
     <script>
         tailwind.config = {
             theme: {
@@ -23,10 +22,11 @@
             }
         }
     </script>
+    <?php wp_head(); ?>
 </head>
 <body <?php body_class( 'bg-white text-gray-800 font-sans' ); ?>>
 
-<nav class="fixed w-full z-50 bg-[#0A2342]/95 backdrop-blur shadow-lg py-4 transition-all">
+<nav class="fixed top-0 left-0 w-full z-50 bg-[#0A2342]/95 backdrop-blur shadow-lg py-4 transition-all">
     <div class="container mx-auto px-4 flex justify-between items-center">
         <a href="<?php echo home_url(); ?>" class="flex items-center space-x-2 text-white cursor-pointer">
             <div class="w-10 h-10 bg-[#D4AF37] rounded flex items-center justify-center font-bold text-[#0A2342] text-xl">P</div>
