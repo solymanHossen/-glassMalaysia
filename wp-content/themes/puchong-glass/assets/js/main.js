@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (i > maxIndex) continue; 
 
             const dot = document.createElement('button');
-            dot.className = `w-2 h-2 rounded-full transition-all ${i === 0 ? 'bg-[#0A2342] w-6' : 'bg-gray-300 hover:bg-gray-400'}`;
+            dot.className = `w-2 h-2 rounded-full transition-all ${i === 0 ? 'bg-[#D4AF37] w-6' : 'bg-white/20 hover:bg-white/40'}`;
             dot.onclick = () => goToSlide(i);
             dotsContainer.appendChild(dot);
         }
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const dots = dotsContainer.children;
             for (let i = 0; i < dots.length; i++) {
                 // The dot index corresponds to the slide index
-                dots[i].className = `w-2 h-2 rounded-full transition-all ${i === currentIndex ? 'bg-[#0A2342] w-6' : 'bg-gray-300 hover:bg-gray-400'}`;
+                dots[i].className = `w-2 h-2 rounded-full transition-all ${i === currentIndex ? 'bg-[#D4AF37] w-6' : 'bg-white/20 hover:bg-white/40'}`;
             }
             
             // Update buttons state
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
             dotsContainer.innerHTML = '';
             for (let i = 0; i <= maxIndex; i++) {
                 const dot = document.createElement('button');
-                dot.className = `w-2 h-2 rounded-full transition-all ${i === currentIndex ? 'bg-[#0A2342] w-6' : 'bg-gray-300 hover:bg-gray-400'}`;
+                dot.className = `w-2 h-2 rounded-full transition-all ${i === currentIndex ? 'bg-[#D4AF37] w-6' : 'bg-white/20 hover:bg-white/40'}`;
                 dot.onclick = () => goToSlide(i);
                 dotsContainer.appendChild(dot);
             }

@@ -117,20 +117,26 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="py-24 bg-gray-50 relative overflow-hidden">
+    <section class="md:py-24 py-12 bg-[#0A2342] relative overflow-hidden">
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[#D4AF37] rounded-full mix-blend-overlay filter blur-[100px] opacity-5"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-[#1E5A8E] rounded-full mix-blend-overlay filter blur-[100px] opacity-10"></div>
+        </div>
+
         <div class="container mx-auto px-4 relative z-10">
-            <div class="text-center mb-12 animate-in">
-                <h4 class="font-bold tracking-widest text-sm mb-2 text-[#0A2342]">CLIENT STORIES</h4>
-                <h2 class="text-3xl md:text-5xl font-bold text-[#0A2342]">Trusted by Neighbors</h2>
-                <div class="w-20 h-1 mx-auto mt-4 rounded bg-[#0A2342]"></div>
+            <div class="text-center mb-16 animate-in">
+                <h4 class="font-bold tracking-widest text-sm mb-3 text-[#D4AF37] uppercase">Client Stories</h4>
+                <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">Trusted by Neighbors</h2>
+                <div class="w-24 h-1.5 mx-auto rounded-full bg-[#D4AF37]"></div>
             </div>
             
             <div class="relative" id="testimonial-slider-container">
                 <!-- Navigation Buttons -->
-                <button id="prev-testimonial" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 z-20 bg-white text-[#0A2342] p-3 rounded-full shadow-lg hover:bg-[#0A2342] hover:text-white transition-all disabled:opacity-50">
+                <button id="prev-testimonial" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-12 z-20 bg-[#1E3A5F] text-white p-3 rounded-full shadow-lg border border-white/10 hover:bg-[#D4AF37] hover:text-[#0A2342] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
                     <i data-lucide="chevron-left" class="w-6 h-6"></i>
                 </button>
-                <button id="next-testimonial" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 z-20 bg-white text-[#0A2342] p-3 rounded-full shadow-lg hover:bg-[#0A2342] hover:text-white transition-all disabled:opacity-50">
+                <button id="next-testimonial" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-12 z-20 bg-[#1E3A5F] text-white p-3 rounded-full shadow-lg border border-white/10 hover:bg-[#D4AF37] hover:text-[#0A2342] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
                     <i data-lucide="chevron-right" class="w-6 h-6"></i>
                 </button>
 
@@ -145,34 +151,34 @@
                                 $img_url = get_the_post_thumbnail_url( get_the_ID(), 'thumbnail' ) ?: 'https://ui-avatars.com/api/?name=' . urlencode(get_the_title()) . '&background=random';
                                 ?>
                                 <div class="w-full md:w-1/3 flex-shrink-0 px-4 testimonial-slide">
-                                    <div class="bg-white p-8 rounded-2xl relative group shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 h-full">
+                                    <div class="bg-[#112B4D]/50 backdrop-blur-sm p-8 rounded-2xl relative group border border-white/10 h-full flex flex-col">
                                         <!-- Quote Icon -->
-                                        <div class="absolute top-6 right-8 text-gray-100 group-hover:text-[#D4AF37]/20 transition-colors">
+                                        <div class="absolute top-8 right-8 text-[#D4AF37]/20">
                                             <i data-lucide="quote" class="w-12 h-12 fill-current"></i>
                                         </div>
 
                                         <!-- Stars -->
                                         <div class="flex gap-1 mb-6">
                                             <?php for($i=0; $i<$rating; $i++): ?>
-                                                <i data-lucide="star" class="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]"></i>
+                                                <i data-lucide="star" class="w-5 h-5 text-[#D4AF37] fill-[#D4AF37]"></i>
                                             <?php endfor; ?>
                                         </div>
 
                                         <!-- Text -->
-                                        <p class="text-gray-600 mb-8 leading-relaxed relative z-10 italic">"<?php echo get_the_content(); ?>"</p>
+                                        <p class="text-gray-300 mb-8 leading-relaxed relative z-10 text-lg">"<?php echo get_the_content(); ?>"</p>
 
                                         <!-- Author -->
-                                        <div class="flex items-center gap-4 border-t border-gray-100 pt-6 mt-auto">
-                                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="w-12 h-12 rounded-full object-cover border-2 border-[#D4AF37]/20" />
+                                        <div class="flex items-center gap-4 border-t border-white/10 pt-6 mt-auto relative">
+                                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php the_title(); ?>" class="w-14 h-14 rounded-full object-cover border-2 border-[#D4AF37]/50" />
                                             <div>
-                                                <h5 class="text-[#0A2342] font-bold"><?php the_title(); ?></h5>
-                                                <p class="text-xs text-gray-500 uppercase tracking-wider font-bold"><?php echo esc_html($role); ?></p>
+                                                <h5 class="text-white font-bold text-lg"><?php the_title(); ?></h5>
+                                                <p class="text-xs text-[#D4AF37] uppercase tracking-wider font-bold"><?php echo esc_html($role); ?></p>
                                             </div>
-                                        </div>
-                                        
-                                        <!-- Verified Badge -->
-                                        <div class="absolute bottom-6 right-6 flex items-center gap-1 text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded-full opacity-70">
-                                            <i data-lucide="check" class="w-3 h-3"></i> Verified
+                                            
+                                            <!-- Verified Badge -->
+                                            <div class="absolute bottom-0 right-0 flex items-center gap-1 text-[10px] text-green-400 bg-green-400/10 px-3 py-1 rounded-full border border-green-400/20">
+                                                <i data-lucide="check" class="w-3 h-3"></i> Verified Project
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -180,28 +186,28 @@
                             endwhile;
                             wp_reset_postdata();
                         else:
-                            echo '<p class="text-gray-500 text-center w-full">No testimonials found.</p>';
+                            echo '<p class="text-gray-400 text-center w-full">No testimonials found.</p>';
                         endif;
                         ?>
                     </div>
                 </div>
                 
                 <!-- Dots -->
-                <div class="flex justify-center gap-2 mt-4" id="testimonial-dots">
+                <div class="flex justify-center gap-2 mt-8" id="testimonial-dots">
                     <!-- JS will populate dots -->
                 </div>
             </div>
             
-            <div class="mt-16 text-center">
-                <div class="inline-flex items-center gap-8 text-gray-500 text-sm font-mono-nums bg-white shadow-sm border border-gray-100 px-8 py-4 rounded-full">
-                    <div class="flex flex-col md:flex-row items-center gap-2">
-                        <span class="text-2xl font-bold text-[#0A2342]">4.9</span>
-                        <span>Average Rating</span>
+            <div class="mt-20 text-center">
+                <div class="inline-flex items-center gap-8 text-gray-300 text-sm font-mono-nums bg-[#112B4D] border border-white/10 px-10 py-5 rounded-full shadow-2xl">
+                    <div class="flex flex-col md:flex-row items-center gap-3">
+                        <span class="text-3xl font-bold text-white">4.9</span>
+                        <span class="uppercase tracking-wider text-xs font-bold">Average Rating</span>
                     </div>
-                    <div class="w-px h-8 bg-gray-200"></div>
-                    <div class="flex flex-col md:flex-row items-center gap-2">
-                        <span class="text-2xl font-bold text-[#0A2342]">500+</span>
-                        <span>5-Star Reviews</span>
+                    <div class="w-px h-10 bg-white/10"></div>
+                    <div class="flex flex-col md:flex-row items-center gap-3">
+                        <span class="text-3xl font-bold text-white">500+</span>
+                        <span class="uppercase tracking-wider text-xs font-bold">5-Star Reviews</span>
                     </div>
                 </div>
             </div>
