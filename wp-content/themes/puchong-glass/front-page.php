@@ -60,12 +60,32 @@ get_header();
                 <!-- Hero Image -->
                 <div class="relative">
                     <div class="glass rounded-2xl overflow-hidden h-96 sm:h-full min-h-96">
-                        <!-- Placeholder image -->
-                        <img src="https://placehold.co/800x600?text=Premium+Glass+Installation" alt="Premium glass and aluminium installation" class="w-full h-full object-cover" />
+                        <?php
+                            if ( has_post_thumbnail() ) {
+                                the_post_thumbnail( 'puchong-hero', array(
+                                    'class' => 'w-full h-full object-cover',
+                                    'alt' => get_the_title(),
+                                    'loading' => 'lazy',
+                                    'decoding' => 'async',
+                                ) );
+                            } else {
+                                ?>
+                                <img 
+                                    src="<?php echo esc_url( Puchong_Image_Helper::get_placeholder_image( 'puchong-hero' ) ); ?>" 
+                                    alt="<?php esc_attr_e( 'Premium glass and aluminium installation', 'puchong-glass' ); ?>"
+                                    width="1920"
+                                    height="1080"
+                                    class="w-full h-full object-cover"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                                <?php
+                            }
+                        ?>
                     </div>
                     <div class="absolute -bottom-8 -right-8 w-32 h-32 glass rounded-xl p-4 backdrop-blur-xl">
                         <div class="text-3xl font-bold text-blue-600 mb-1">5★</div>
-                        <p class="text-xs text-gray-600">Rated by 480+ clients</p>
+                        <p class="text-xs text-gray-600"><?php esc_html_e( 'Rated by 480+ clients', 'puchong-glass' ); ?></p>
                     </div>
                 </div>
             </div>
@@ -94,9 +114,8 @@ get_header();
                 if ( $services_query->have_posts() ) :
                     while ( $services_query->have_posts() ) : $services_query->the_post();
                 ?>
-                    <a href="<?php the_permalink(); ?>" class="group p-6 rounded-xl glass smooth-hover border border-gray-200 hover:border-blue-300 hover:shadow-xl block">
+                    <a href="<?php the_permalink(); ?>" class="group p-6 rounded-xl glass smooth-hover border border-gray-200 hover:border-blue-300 hover:shadow-xl block transition-all duration-300">
                         <div class="text-blue-500 mb-4 group-hover:scale-110 smooth-transition">
-                            <!-- Fallback icon if no custom field -->
                             <i data-lucide="zap" class="w-8 h-8"></i>
                         </div>
                         <h3 class="font-serif text-xl font-bold text-gray-900 mb-2"><?php the_title(); ?></h3>
@@ -115,7 +134,7 @@ get_header();
                         ['icon' => 'award', 'title' => 'Grill Installation', 'desc' => 'Premium grill designs and installations for security and aesthetics. Residential and commercial grade.', 'link' => '/services#grill'],
                     ];
                     foreach ($services as $service) : ?>
-                        <a href="<?php echo home_url($service['link']); ?>" class="group p-6 rounded-xl glass smooth-hover border border-gray-200 hover:border-blue-300 hover:shadow-xl block">
+                        <a href="<?php echo home_url($service['link']); ?>" class="group p-6 rounded-xl glass smooth-hover border border-gray-200 hover:border-blue-300 hover:shadow-xl block transition-all duration-300">
                             <div class="text-blue-500 mb-4 group-hover:scale-110 smooth-transition">
                                 <i data-lucide="<?php echo $service['icon']; ?>" class="w-8 h-8"></i>
                             </div>
