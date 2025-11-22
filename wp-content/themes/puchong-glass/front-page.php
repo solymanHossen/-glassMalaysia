@@ -66,6 +66,56 @@
         </div>
     </section>
 
+    <!-- Safety Standard -->
+    <section id="safety" class="py-24 bg-[#0A2342] relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="text-left mb-8 animate-in">
+                        <h4 class="font-bold tracking-widest text-sm mb-2 text-[#D4AF37]">SAFETY STANDARD</h4>
+                        <h2 class="text-3xl md:text-5xl font-bold text-white">Fortress Grade Security</h2>
+                        <div class="w-20 h-1 mt-4 rounded bg-[#D4AF37]"></div>
+                    </div>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        Your home shouldn't just look good; it must be impenetrable. Our security grills and doors are engineered using high-tensile aluminium alloys and heavy-duty deadbolts.
+                    </p>
+               
+                    <div class="space-y-6">
+                        <?php
+                        $features = [
+                            [ "title" => "Impact Resistant", "desc" => "Tested against blunt force to prevent forced entry." ],
+                            [ "title" => "Anti-Pry Locking", "desc" => "Multi-point locking mechanisms for maximum security." ],
+                            [ "title" => "Rust Proof Warranty", "desc" => "Powder-coated finishes that withstand Malaysian humidity." ]
+                        ];
+                        foreach($features as $item):
+                        ?>
+                        <div class="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#D4AF37]/50 transition-colors">
+                            <div class="bg-[#D4AF37]/10 p-3 rounded-lg h-fit">
+                                <i data-lucide="lock" class="w-6 h-6 text-[#D4AF37]"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1"><?php echo esc_html($item['title']); ?></h4>
+                                <p class="text-sm text-gray-400"><?php echo esc_html($item['desc']); ?></p>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+             
+                <div class="relative">
+                    <div class="absolute inset-0 bg-[#D4AF37] rounded-full blur-[150px] opacity-10"></div>
+                    <div class="relative rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1618219944342-824e40a13285?q=80&w=2574&auto=format&fit=crop" alt="Security Door Detail" class="w-full h-auto" />
+                        <div class="absolute bottom-0 inset-x-0 bg-[#0A2342]/90 backdrop-blur p-6 text-center border-t border-white/10">
+                            <p class="text-[#D4AF37] font-mono text-sm font-bold">CERTIFIED SAFETY GRADE A</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Before/After -->
     <section class="py-24 bg-white">
         <div class="container mx-auto px-4">
