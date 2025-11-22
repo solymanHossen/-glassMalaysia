@@ -67,7 +67,7 @@
     </section>
 
     <!-- Safety Standard -->
-    <section id="safety" class="py-24 bg-[#0A2342] relative overflow-hidden">
+    <section id="safety" class="py-16 bg-[#0A2342] relative overflow-hidden">
         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
         <div class="container mx-auto px-6 relative z-10">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
@@ -106,7 +106,7 @@
                 <div class="relative">
                     <div class="absolute inset-0 bg-[#D4AF37] rounded-full blur-[150px] opacity-10"></div>
                     <div class="relative rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl">
-                        <img src="https://images.unsplash.com/photo-1618219944342-824e40a13285?q=80&w=2574&auto=format&fit=crop" alt="Security Door Detail" class="w-full h-auto" />
+                        <img src="https://images.unsplash.com/photo-1618219944342-824e40a13285?q=80&w=2574&auto=format&fit=crop" alt="Security Door Detail" class="w-full h-[500px] object-cover" />
                         <div class="absolute bottom-0 inset-x-0 bg-[#0A2342]/90 backdrop-blur p-6 text-center border-t border-white/10">
                             <p class="text-[#D4AF37] font-mono text-sm font-bold">CERTIFIED SAFETY GRADE A</p>
                         </div>
