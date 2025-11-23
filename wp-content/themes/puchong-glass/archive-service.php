@@ -28,7 +28,8 @@
                 while ( have_posts() ) : the_post();
                     $icon = get_post_meta( get_the_ID(), '_pg_icon', true ) ?: 'Shield';
                     $benefits = get_post_meta( get_the_ID(), '_pg_benefits', true );
-                    $img_url = get_the_post_thumbnail_url( get_the_ID(), 'large' ) ?: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=1200';
+                    $custom_image = get_post_meta( get_the_ID(), '_pg_custom_image', true );
+                    $img_url = $custom_image ?: (get_the_post_thumbnail_url( get_the_ID(), 'large' ) ?: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=1200');
                     ?>
                     <div onclick="window.location.href='<?php the_permalink(); ?>'" class="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all cursor-pointer">
                         <div class="h-48 overflow-hidden relative">

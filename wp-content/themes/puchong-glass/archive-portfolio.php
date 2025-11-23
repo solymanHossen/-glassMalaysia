@@ -41,7 +41,8 @@
                     }
                     $location = get_post_meta( get_the_ID(), '_pg_location', true );
                     $year = get_post_meta( get_the_ID(), '_pg_year', true );
-                    $img_url = get_the_post_thumbnail_url( get_the_ID(), 'large' ) ?: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1200';
+                    $custom_image = get_post_meta( get_the_ID(), '_pg_custom_image', true );
+                    $img_url = $custom_image ?: (get_the_post_thumbnail_url( get_the_ID(), 'large' ) ?: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1200');
                     ?>
                     <div class="portfolio-item group cursor-pointer <?php echo esc_attr( $term_slugs ); ?>" onclick="window.location.href='<?php the_permalink(); ?>'">
                         <div class="relative overflow-hidden rounded-2xl aspect-[4/3] mb-4 shadow-md">

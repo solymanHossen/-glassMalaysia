@@ -21,6 +21,75 @@ function pg_enqueue_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'pg_enqueue_scripts' );
 
+function pg_admin_scripts() {
+    wp_enqueue_media();
+}
+add_action( 'admin_enqueue_scripts', 'pg_admin_scripts' );
+
+function pg_admin_footer_scripts() {
+    global $post_type;
+    if ( 'service' === $post_type || 'portfolio' === $post_type ) {
+        ?>
+        <script>
+        jQuery(document).ready(function($){
+            // Image Upload Button
+            $(document).on('click', '.pg-upload-image-btn', function(e) {
+                e.preventDefault();
+                var button = $(this);
+                var inputField = button.siblings('input[name="pg_custom_image"]');
+                var imagePreview = button.siblings('.pg-image-preview');
+                var removeButton = button.siblings('.pg-remove-image-btn');
+                
+                var mediaUploader = wp.media({
+                    title: 'Select or Upload Image',
+                    button: {
+                        text: 'Use this image'
+                    },
+                    multiple: false
+                });
+                
+                mediaUploader.on('select', function() {
+                    var attachment = mediaUploader.state().get('selection').first().toJSON();
+                    inputField.val(attachment.url);
+                    imagePreview.attr('src', attachment.url).show();
+                    removeButton.show();
+                });
+                
+                mediaUploader.open();
+            });
+            
+            // Remove Image Button
+            $(document).on('click', '.pg-remove-image-btn', function(e) {
+                e.preventDefault();
+                var button = $(this);
+                button.siblings('input[name="pg_custom_image"]').val('');
+                button.siblings('.pg-image-preview').hide();
+                button.hide();
+            });
+        });
+        </script>
+        <style>
+        .pg-image-preview {
+            max-width: 300px;
+            height: auto;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            padding: 5px;
+            background: #f9f9f9;
+        }
+        .pg-image-field-wrapper {
+            margin-bottom: 15px;
+        }
+        .pg-remove-image-btn {
+            margin-left: 10px;
+            color: #a00;
+        }
+        </style>
+        <?php
+    }
+}
+add_action( 'admin_footer', 'pg_admin_footer_scripts' );
+
 function pg_theme_support() {
     add_theme_support( 'title-tag' );
     add_theme_support( 'post-thumbnails' );
@@ -104,7 +173,17 @@ function pg_service_meta_callback( $post ) {
     $icon = get_post_meta( $post->ID, '_pg_icon', true );
     $benefits = get_post_meta( $post->ID, '_pg_benefits', true );
     $specs = get_post_meta( $post->ID, '_pg_specs', true );
+    $custom_image = get_post_meta( $post->ID, '_pg_custom_image', true );
     ?>
+    <div class="pg-image-field-wrapper">
+        <label><strong>Service Image (Optional - overrides Featured Image):</strong></label><br>
+        <small>Leave empty to use the Featured Image instead.</small><br><br>
+        <input type="text" name="pg_custom_image" value="<?php echo esc_attr( $custom_image ); ?>" class="widefat" placeholder="Image URL" readonly style="margin-bottom: 10px;">
+        <button type="button" class="button button-secondary pg-upload-image-btn">Upload/Select Image</button>
+        <button type="button" class="button button-link-delete pg-remove-image-btn" style="<?php echo $custom_image ? '' : 'display:none;'; ?>">Remove Image</button>
+        <br>
+        <img src="<?php echo esc_url( $custom_image ); ?>" class="pg-image-preview" style="<?php echo $custom_image ? '' : 'display:none;'; ?>">
+    </div>
     <p>
         <label for="pg_icon"><strong>Icon Name (Lucide):</strong></label><br>
         <input type="text" id="pg_icon" name="pg_icon" value="<?php echo esc_attr( $icon ); ?>" class="widefat" placeholder="e.g. Shield, Zap, Home">
@@ -126,7 +205,17 @@ function pg_portfolio_meta_callback( $post ) {
     $year = get_post_meta( $post->ID, '_pg_year', true );
     $challenge = get_post_meta( $post->ID, '_pg_challenge', true );
     $solution = get_post_meta( $post->ID, '_pg_solution', true );
+    $custom_image = get_post_meta( $post->ID, '_pg_custom_image', true );
     ?>
+    <div class="pg-image-field-wrapper">
+        <label><strong>Project Image (Optional - overrides Featured Image):</strong></label><br>
+        <small>Leave empty to use the Featured Image instead.</small><br><br>
+        <input type="text" name="pg_custom_image" value="<?php echo esc_attr( $custom_image ); ?>" class="widefat" placeholder="Image URL" readonly style="margin-bottom: 10px;">
+        <button type="button" class="button button-secondary pg-upload-image-btn">Upload/Select Image</button>
+        <button type="button" class="button button-link-delete pg-remove-image-btn" style="<?php echo $custom_image ? '' : 'display:none;'; ?>">Remove Image</button>
+        <br>
+        <img src="<?php echo esc_url( $custom_image ); ?>" class="pg-image-preview" style="<?php echo $custom_image ? '' : 'display:none;'; ?>">
+    </div>
     <p>
         <label for="pg_location"><strong>Location:</strong></label><br>
         <input type="text" id="pg_location" name="pg_location" value="<?php echo esc_attr( $location ); ?>" class="widefat">
@@ -150,6 +239,9 @@ function pg_save_meta( $post_id ) {
     if ( ! isset( $_POST['pg_meta_nonce'] ) || ! wp_verify_nonce( $_POST['pg_meta_nonce'], 'pg_save_meta' ) ) return;
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
     if ( ! current_user_can( 'edit_post', $post_id ) ) return;
+
+    // Save Custom Image
+    if ( isset( $_POST['pg_custom_image'] ) ) update_post_meta( $post_id, '_pg_custom_image', sanitize_text_field( $_POST['pg_custom_image'] ) );
 
     // Service Meta
     if ( isset( $_POST['pg_icon'] ) ) update_post_meta( $post_id, '_pg_icon', sanitize_text_field( $_POST['pg_icon'] ) );

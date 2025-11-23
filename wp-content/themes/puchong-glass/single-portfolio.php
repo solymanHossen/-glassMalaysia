@@ -6,7 +6,8 @@ while ( have_posts() ) : the_post();
     $year = get_post_meta( get_the_ID(), '_pg_year', true );
     $challenge = get_post_meta( get_the_ID(), '_pg_challenge', true );
     $solution = get_post_meta( get_the_ID(), '_pg_solution', true );
-    $img_url = get_the_post_thumbnail_url( get_the_ID(), 'full' ) ?: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1200';
+    $custom_image = get_post_meta( get_the_ID(), '_pg_custom_image', true );
+    $img_url = $custom_image ?: (get_the_post_thumbnail_url( get_the_ID(), 'full' ) ?: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1200');
     
     $terms = get_the_terms( get_the_ID(), 'portfolio_category' );
     $category = ($terms && !is_wp_error($terms)) ? $terms[0]->name : 'Project';
