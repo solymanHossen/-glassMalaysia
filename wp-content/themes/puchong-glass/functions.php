@@ -308,6 +308,20 @@ function pg_create_contact_table() {
 add_action( 'after_switch_theme', 'pg_create_contact_table' );
 
 /**
+ * Ensure table exists on admin init (backup check)
+ */
+function pg_ensure_contact_table_exists() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'pg_contacts';
+    
+    // Check if table exists
+    if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) {
+        pg_create_contact_table();
+    }
+}
+add_action( 'admin_init', 'pg_ensure_contact_table_exists' );
+
+/**
  * AJAX Handler for Contact Form Submission
  */
 function pg_handle_contact_form() {
