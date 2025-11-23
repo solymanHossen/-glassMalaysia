@@ -21,31 +21,89 @@ get_header();
                     <h3 class="text-2xl font-bold text-[#0A2342] mb-2">Send a Message</h3>
                     <p class="text-gray-500 mb-8">Fill out the form below and our team will get back to you within 24 hours.</p>
                     
-                    <form class="space-y-5 flex-grow" onsubmit="event.preventDefault(); alert('Message sent!');">
+                    <div id="pg-form-message" style="display: none;" class="mb-4 p-4 rounded-xl"></div>
+                    
+                    <form id="pg-contact-form" class="space-y-5 flex-grow">
                         <div>
                             <label class="text-xs font-bold text-[#0A2342] uppercase tracking-wider mb-1 block">Full Name</label>
-                            <input type="text" placeholder="e.g. John Doe" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
+                            <input type="text" name="name" id="pg-name" placeholder="e.g. John Doe" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
                         </div>
                         
                         <div>
                             <label class="text-xs font-bold text-[#0A2342] uppercase tracking-wider mb-1 block">Phone Number</label>
-                            <input type="tel" placeholder="+60 12-345 6789" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
+                            <input type="tel" name="phone" id="pg-phone" placeholder="+60 12-345 6789" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
                         </div>
                         
                         <div>
                             <label class="text-xs font-bold text-[#0A2342] uppercase tracking-wider mb-1 block">Email Address</label>
-                            <input type="email" placeholder="name@example.com" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
+                            <input type="email" name="email" id="pg-email" placeholder="name@example.com" class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium" required />
                         </div>
                         
                         <div>
                             <label class="text-xs font-bold text-[#0A2342] uppercase tracking-wider mb-1 block">Message</label>
-                            <textarea rows="4" placeholder="Tell us about your renovation needs..." class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium resize-none"></textarea>
+                            <textarea name="message" id="pg-message" rows="4" placeholder="Tell us about your renovation needs..." class="w-full p-4 bg-gray-50 rounded-xl border-transparent focus:bg-white focus:border-[#D4AF37] focus:ring-0 transition-all outline-none font-medium resize-none" required></textarea>
                         </div>
                         
-                        <button type="submit" class="w-full py-4 bg-[#0A2342] text-white font-bold rounded-xl hover:bg-[#1E5A8E] transition-all shadow-lg hover:shadow-[#0A2342]/30 flex items-center justify-center group">
-                            Send Message <i data-lucide="arrow-right" class="ml-2 group-hover:translate-x-1 transition-transform w-4 h-4"></i>
+                        <button type="submit" id="pg-submit-btn" class="w-full py-4 bg-[#0A2342] text-white font-bold rounded-xl hover:bg-[#1E5A8E] transition-all shadow-lg hover:shadow-[#0A2342]/30 flex items-center justify-center group">
+                            <span id="pg-btn-text">Send Message</span>
+                            <i data-lucide="arrow-right" class="ml-2 group-hover:translate-x-1 transition-transform w-4 h-4" id="pg-btn-icon"></i>
                         </button>
                     </form>
+                    
+                    <script>
+                    jQuery(document).ready(function($) {
+                        $('#pg-contact-form').on('submit', function(e) {
+                            e.preventDefault();
+                            
+                            var form = $(this);
+                            var submitBtn = $('#pg-submit-btn');
+                            var btnText = $('#pg-btn-text');
+                            var btnIcon = $('#pg-btn-icon');
+                            var messageDiv = $('#pg-form-message');
+                            
+                            // Disable form
+                            submitBtn.prop('disabled', true);
+                            btnText.text('Sending...');
+                            btnIcon.hide();
+                            
+                            // Prepare data
+                            var formData = {
+                                action: 'pg_contact_form',
+                                nonce: '<?php echo wp_create_nonce( "pg_contact_form" ); ?>',
+                                name: $('#pg-name').val(),
+                                phone: $('#pg-phone').val(),
+                                email: $('#pg-email').val(),
+                                message: $('#pg-message').val()
+                            };
+                            
+                            // Send AJAX request
+                            $.post('<?php echo admin_url( "admin-ajax.php" ); ?>', formData, function(response) {
+                                if (response.success) {
+                                    messageDiv.removeClass('bg-red-100 text-red-700')
+                                             .addClass('bg-green-100 text-green-700')
+                                             .html('✓ ' + response.data.message)
+                                             .fadeIn();
+                                    form[0].reset();
+                                } else {
+                                    messageDiv.removeClass('bg-green-100 text-green-700')
+                                             .addClass('bg-red-100 text-red-700')
+                                             .html('✗ ' + response.data.message)
+                                             .fadeIn();
+                                }
+                                
+                                // Re-enable form
+                                submitBtn.prop('disabled', false);
+                                btnText.text('Send Message');
+                                btnIcon.show();
+                                
+                                // Hide message after 5 seconds
+                                setTimeout(function() {
+                                    messageDiv.fadeOut();
+                                }, 5000);
+                            });
+                        });
+                    });
+                    </script>
                 </div>
             </div>
 
