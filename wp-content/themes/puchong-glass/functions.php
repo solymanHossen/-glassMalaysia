@@ -16,7 +16,8 @@ function pg_enqueue_scripts() {
     // Pass AJAX URL to script
     wp_localize_script( 'pg-main', 'pg_data', array(
         'ajax_url' => admin_url( 'admin-ajax.php' ),
-        'whatsapp_number' => '60123456789'
+        'whatsapp_number' => '60123456789',
+        'newsletter_nonce' => wp_create_nonce( 'pg_newsletter_nonce' )
     ));
 }
 add_action( 'wp_enqueue_scripts', 'pg_enqueue_scripts' );
@@ -308,6 +309,30 @@ function pg_create_contact_table() {
 add_action( 'after_switch_theme', 'pg_create_contact_table' );
 
 /**
+ * Create Newsletter Subscribers Database Table on Theme Activation
+ */
+function pg_create_newsletter_table() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'pg_newsletter_subscribers';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        email varchar(255) NOT NULL UNIQUE,
+        subscribed_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        status varchar(20) DEFAULT 'active' NOT NULL,
+        ip_address varchar(100),
+        user_agent text,
+        PRIMARY KEY  (id),
+        UNIQUE KEY email (email)
+    ) $charset_collate;";
+
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
+}
+add_action( 'after_switch_theme', 'pg_create_newsletter_table' );
+
+/**
  * Ensure table exists on admin init (backup check)
  */
 function pg_ensure_contact_table_exists() {
@@ -317,6 +342,12 @@ function pg_ensure_contact_table_exists() {
     // Check if table exists
     if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) {
         pg_create_contact_table();
+    }
+    
+    // Check newsletter table
+    $newsletter_table = $wpdb->prefix . 'pg_newsletter_subscribers';
+    if ( $wpdb->get_var( "SHOW TABLES LIKE '$newsletter_table'" ) != $newsletter_table ) {
+        pg_create_newsletter_table();
     }
 }
 add_action( 'admin_init', 'pg_ensure_contact_table_exists' );
@@ -382,6 +413,94 @@ add_action( 'wp_ajax_pg_contact_form', 'pg_handle_contact_form' );
 add_action( 'wp_ajax_nopriv_pg_contact_form', 'pg_handle_contact_form' );
 
 /**
+ * AJAX Handler for Newsletter Subscription
+ */
+function pg_handle_newsletter_subscribe() {
+    global $wpdb;
+    
+    // Check nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'pg_newsletter_nonce' ) ) {
+        wp_send_json_error( array( 'message' => 'Security check failed' ) );
+    }
+    
+    // Sanitize email
+    $email = sanitize_email( $_POST['email'] );
+    
+    // Validate email
+    if ( empty( $email ) || ! is_email( $email ) ) {
+        wp_send_json_error( array( 'message' => 'Please enter a valid email address' ) );
+    }
+    
+    // Check if email already exists
+    $table_name = $wpdb->prefix . 'pg_newsletter_subscribers';
+    $existing = $wpdb->get_row( $wpdb->prepare( 
+        "SELECT * FROM $table_name WHERE email = %s", 
+        $email 
+    ) );
+    
+    if ( $existing ) {
+        if ( $existing->status === 'unsubscribed' ) {
+            // Reactivate subscription
+            $wpdb->update(
+                $table_name,
+                array( 'status' => 'active', 'subscribed_at' => current_time( 'mysql' ) ),
+                array( 'email' => $email ),
+                array( '%s', '%s' ),
+                array( '%s' )
+            );
+            wp_send_json_success( array( 'message' => 'Welcome back! Your subscription has been reactivated.' ) );
+        } else {
+            wp_send_json_error( array( 'message' => 'This email is already subscribed to our newsletter' ) );
+        }
+    }
+    
+    // Get user info
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    
+    // Insert new subscriber
+    $result = $wpdb->insert(
+        $table_name,
+        array(
+            'email' => $email,
+            'status' => 'active',
+            'ip_address' => $ip_address,
+            'user_agent' => $user_agent
+        ),
+        array( '%s', '%s', '%s', '%s' )
+    );
+    
+    if ( $result ) {
+        // Send email notification to admin
+        $admin_email = get_option( 'admin_email' );
+        $subject = 'New Newsletter Subscription - ' . get_bloginfo( 'name' );
+        $body = "New newsletter subscription:\n\n";
+        $body .= "Email: $email\n";
+        $body .= "Date: " . current_time( 'mysql' ) . "\n";
+        $body .= "IP: $ip_address\n\n";
+        $body .= "View all subscribers: " . admin_url( 'admin.php?page=pg-newsletter-subscribers' );
+        
+        wp_mail( $admin_email, $subject, $body );
+        
+        // Send welcome email to subscriber (optional)
+        $welcome_subject = 'Welcome to ' . get_bloginfo( 'name' ) . ' Newsletter!';
+        $welcome_body = "Thank you for subscribing to our newsletter!\n\n";
+        $welcome_body .= "You'll receive updates about our latest services, projects, and exclusive offers.\n\n";
+        $welcome_body .= "Best regards,\n";
+        $welcome_body .= get_bloginfo( 'name' ) . " Team\n\n";
+        $welcome_body .= "Website: " . home_url();
+        
+        wp_mail( $email, $welcome_subject, $welcome_body );
+        
+        wp_send_json_success( array( 'message' => 'Thank you! You\'ve successfully subscribed to our newsletter.' ) );
+    } else {
+        wp_send_json_error( array( 'message' => 'Failed to subscribe. Please try again later.' ) );
+    }
+}
+add_action( 'wp_ajax_pg_newsletter_subscribe', 'pg_handle_newsletter_subscribe' );
+add_action( 'wp_ajax_nopriv_pg_newsletter_subscribe', 'pg_handle_newsletter_subscribe' );
+
+/**
  * Update Contact Status via AJAX
  */
 function pg_update_contact_status() {
@@ -444,6 +563,12 @@ function pg_add_dashboard_widgets() {
         'pg_contacts_widget',
         '📬 Contact Form Submissions',
         'pg_contacts_widget_display'
+    );
+    
+    wp_add_dashboard_widget(
+        'pg_newsletter_widget',
+        '📧 Newsletter Subscribers',
+        'pg_newsletter_widget_display'
     );
     
     wp_add_dashboard_widget(
@@ -542,6 +667,7 @@ function pg_custom_dashboard_welcome() {
             <a href="<?php echo admin_url( 'post-new.php?post_type=service' ); ?>" class="pg-welcome-btn">➕ Add Service</a>
             <a href="<?php echo admin_url( 'post-new.php?post_type=portfolio' ); ?>" class="pg-welcome-btn">➕ Add Project</a>
             <a href="<?php echo admin_url( 'admin.php?page=pg-all-contacts' ); ?>" class="pg-welcome-btn">📬 View Contacts</a>
+             <a href="<?php echo admin_url( 'admin.php?page=pg-newsletter-subscribers' ); ?>" class="pg-welcome-btn">News latter subscriber</a>
             <a href="<?php echo home_url(); ?>" target="_blank" class="pg-welcome-btn">🌐 View Website</a>
         </div>
     </div>
@@ -559,6 +685,131 @@ function pg_show_welcome_only_on_dashboard() {
     }
 }
 add_action( 'current_screen', 'pg_show_welcome_only_on_dashboard' );
+
+/**
+ * Newsletter Subscribers Widget
+ */
+function pg_newsletter_widget_display() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'pg_newsletter_subscribers';
+    
+    // Get statistics
+    $total_subscribers = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE status = 'active'" );
+    $today_subscribers = $wpdb->get_var( $wpdb->prepare( 
+        "SELECT COUNT(*) FROM $table_name WHERE DATE(subscribed_at) = %s AND status = 'active'", 
+        date( 'Y-m-d' ) 
+    ));
+    $week_subscribers = $wpdb->get_var( $wpdb->prepare( 
+        "SELECT COUNT(*) FROM $table_name WHERE subscribed_at >= DATE_SUB(%s, INTERVAL 7 DAY) AND status = 'active'", 
+        date( 'Y-m-d' ) 
+    ));
+    
+    // Get recent subscribers
+    $subscribers = $wpdb->get_results( "SELECT * FROM $table_name WHERE status = 'active' ORDER BY subscribed_at DESC LIMIT 10" );
+    
+    ?>
+    <style>
+        .pg-newsletter-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .pg-newsletter-stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+        }
+        .pg-newsletter-stat-card.today {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .pg-newsletter-stat-card.week {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .pg-newsletter-stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .pg-newsletter-stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .pg-subscriber-item {
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .pg-subscriber-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .pg-subscriber-email {
+            font-weight: bold;
+            color: #0A2342;
+            font-size: 14px;
+        }
+        .pg-subscriber-date {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+    
+    <div class="pg-newsletter-stats">
+        <div class="pg-newsletter-stat-card">
+            <div class="pg-newsletter-stat-number"><?php echo $total_subscribers; ?></div>
+            <div class="pg-newsletter-stat-label">Total Active</div>
+        </div>
+        <div class="pg-newsletter-stat-card today">
+            <div class="pg-newsletter-stat-number"><?php echo $today_subscribers; ?></div>
+            <div class="pg-newsletter-stat-label">Today</div>
+        </div>
+        <div class="pg-newsletter-stat-card week">
+            <div class="pg-newsletter-stat-number"><?php echo $week_subscribers; ?></div>
+            <div class="pg-newsletter-stat-label">This Week</div>
+        </div>
+    </div>
+    
+    <?php if ( empty( $subscribers ) ): ?>
+        <div class="pg-no-contacts">
+            <p><strong>No newsletter subscribers yet</strong></p>
+            <p>Newsletter subscriptions will appear here.</p>
+        </div>
+    <?php else: ?>
+        <div class="pg-subscribers-list">
+            <?php foreach ( $subscribers as $subscriber ): ?>
+                <div class="pg-subscriber-item">
+                    <div>
+                        <div class="pg-subscriber-email">📧 <?php echo esc_html( $subscriber->email ); ?></div>
+                        <div class="pg-subscriber-date">
+                            🕒 <?php echo date( 'M j, Y g:i A', strtotime( $subscriber->subscribed_at ) ); ?>
+                        </div>
+                    </div>
+                    <a href="mailto:<?php echo esc_attr( $subscriber->email ); ?>" class="button button-small">
+                        ✉️ Email
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <div class="pg-view-all">
+            <a href="<?php echo admin_url( 'admin.php?page=pg-newsletter-subscribers' ); ?>" class="button button-primary">
+                View All Subscribers →
+            </a>
+        </div>
+    <?php endif; ?>
+    <?php
+}
 
 /**
  * Contact Form Submissions Widget
@@ -1161,6 +1412,26 @@ function pg_add_admin_menu() {
         'pg-export-contacts',
         'pg_export_contacts_page'
     );
+    
+    // Newsletter Subscribers Menu
+    add_menu_page(
+        'Newsletter Subscribers',
+        'Newsletter',
+        'manage_options',
+        'pg-newsletter-subscribers',
+        'pg_newsletter_subscribers_page',
+        'dashicons-email-alt',
+        26
+    );
+    
+    add_submenu_page(
+        'pg-newsletter-subscribers',
+        'Export Subscribers',
+        'Export to CSV',
+        'manage_options',
+        'pg-export-newsletter',
+        'pg_export_newsletter_page'
+    );
 }
 add_action( 'admin_menu', 'pg_add_admin_menu' );
 
@@ -1333,3 +1604,253 @@ function pg_all_contacts_page() {
     <?php
 }
 
+
+/**
+ * Newsletter Subscribers Admin Page
+ */
+function pg_newsletter_subscribers_page() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'pg_newsletter_subscribers';
+    
+    // Handle bulk actions
+    if ( isset( $_POST['bulk_action'] ) && isset( $_POST['subscriber_ids'] ) ) {
+        $action = sanitize_text_field( $_POST['bulk_action'] );
+        $subscriber_ids = array_map( 'intval', $_POST['subscriber_ids'] );
+        
+        if ( $action === 'delete' ) {
+            $ids_placeholder = implode( ',', array_fill( 0, count( $subscriber_ids ), '%d' ) );
+            $wpdb->query( $wpdb->prepare( "DELETE FROM $table_name WHERE id IN ($ids_placeholder)", $subscriber_ids ) );
+            echo '<div class="notice notice-success"><p>Selected subscribers deleted.</p></div>';
+        } elseif ( in_array( $action, array( 'active', 'unsubscribed' ) ) ) {
+            $ids_placeholder = implode( ',', array_fill( 0, count( $subscriber_ids ), '%d' ) );
+            $wpdb->query( $wpdb->prepare( "UPDATE $table_name SET status = %s WHERE id IN ($ids_placeholder)", array_merge( array( $action ), $subscriber_ids ) ) );
+            echo '<div class="notice notice-success"><p>Status updated for selected subscribers.</p></div>';
+        }
+    }
+    
+    // Pagination
+    $per_page = 20;
+    $page = isset( $_GET['paged'] ) ? max( 1, intval( $_GET['paged'] ) ) : 1;
+    $offset = ( $page - 1 ) * $per_page;
+    
+    $total_subscribers = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
+    $total_pages = ceil( $total_subscribers / $per_page );
+    
+    $subscribers = $wpdb->get_results( $wpdb->prepare( 
+        "SELECT * FROM $table_name ORDER BY subscribed_at DESC LIMIT %d OFFSET %d",
+        $per_page,
+        $offset
+    ) );
+    
+    // Stats
+    $active_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE status = 'active'" );
+    $unsubscribed_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE status = 'unsubscribed'" );
+    
+    ?>
+    <div class="wrap">
+        <h1 class="wp-heading-inline">📧 Newsletter Subscribers</h1>
+        <a href="<?php echo admin_url( 'admin.php?pg_export_newsletter=csv' ); ?>" class="page-title-action">📥 Export to CSV</a>
+        <a href="<?php echo admin_url( 'index.php' ); ?>" class="page-title-action">← Back to Dashboard</a>
+        <hr class="wp-header-end">
+        
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2 style="margin: 0 0 10px 0; color: white;">📊 Subscriber Statistics</h2>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div>
+                    <div style="font-size: 32px; font-weight: bold;"><?php echo $total_subscribers; ?></div>
+                    <div style="opacity: 0.9;">Total Subscribers</div>
+                </div>
+                <div>
+                    <div style="font-size: 32px; font-weight: bold;"><?php echo $active_count; ?></div>
+                    <div style="opacity: 0.9;">Active</div>
+                </div>
+                <div>
+                    <div style="font-size: 32px; font-weight: bold;"><?php echo $unsubscribed_count; ?></div>
+                    <div style="opacity: 0.9;">Unsubscribed</div>
+                </div>
+            </div>
+        </div>
+        
+        <?php if ( empty( $subscribers ) ): ?>
+            <div class="notice notice-info">
+                <p>No newsletter subscribers yet.</p>
+            </div>
+        <?php else: ?>
+            <form method="post">
+                <div class="tablenav top">
+                    <div class="alignleft actions bulkactions">
+                        <select name="bulk_action">
+                            <option value="">Bulk Actions</option>
+                            <option value="active">Mark as Active</option>
+                            <option value="unsubscribed">Mark as Unsubscribed</option>
+                            <option value="delete">Delete</option>
+                        </select>
+                        <input type="submit" class="button action" value="Apply">
+                    </div>
+                    <div class="tablenav-pages">
+                        <span class="displaying-num"><?php echo $total_subscribers; ?> items</span>
+                        <?php if ( $total_pages > 1 ): ?>
+                            <span class="pagination-links">
+                                <?php if ( $page > 1 ): ?>
+                                    <a class="prev-page button" href="?page=pg-newsletter-subscribers&paged=<?php echo $page - 1; ?>">‹</a>
+                                <?php endif; ?>
+                                <span class="paging-input">
+                                    <span class="tablenav-paging-text"><?php echo $page; ?> of <?php echo $total_pages; ?></span>
+                                </span>
+                                <?php if ( $page < $total_pages ): ?>
+                                    <a class="next-page button" href="?page=pg-newsletter-subscribers&paged=<?php echo $page + 1; ?>">›</a>
+                                <?php endif; ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <table class="wp-list-table widefat fixed striped">
+                    <thead>
+                        <tr>
+                            <td class="check-column"><input type="checkbox" id="cb-select-all-newsletter"></td>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Subscribed Date</th>
+                            <th>IP Address</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ( $subscribers as $subscriber ): ?>
+                            <tr>
+                                <th class="check-column">
+                                    <input type="checkbox" name="subscriber_ids[]" value="<?php echo $subscriber->id; ?>">
+                                </th>
+                                <td><strong><a href="mailto:<?php echo esc_attr( $subscriber->email ); ?>"><?php echo esc_html( $subscriber->email ); ?></a></strong></td>
+                                <td>
+                                    <span class="pg-contact-badge <?php echo esc_attr( $subscriber->status ); ?>" style="padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; <?php echo $subscriber->status === 'active' ? 'background: #28a745; color: #fff;' : 'background: #6c757d; color: #fff;'; ?>">
+                                        <?php echo esc_html( ucfirst( $subscriber->status ) ); ?>
+                                    </span>
+                                </td>
+                                <td><?php echo date( 'M j, Y g:i A', strtotime( $subscriber->subscribed_at ) ); ?></td>
+                                <td><?php echo esc_html( $subscriber->ip_address ); ?></td>
+                                <td>
+                                    <a href="mailto:<?php echo esc_attr( $subscriber->email ); ?>" class="button button-small">
+                                        ✉️ Send Email
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </form>
+        <?php endif; ?>
+    </div>
+    
+    <script>
+    jQuery(document).ready(function($) {
+        $('#cb-select-all-newsletter').on('click', function() {
+            $('input[name="subscriber_ids[]"]').prop('checked', this.checked);
+        });
+    });
+    </script>
+    <?php
+}
+
+/**
+ * Export Newsletter Subscribers to CSV
+ */
+function pg_export_newsletter_csv() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_die( 'Unauthorized' );
+    }
+    
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'pg_newsletter_subscribers';
+    $subscribers = $wpdb->get_results( "SELECT * FROM $table_name ORDER BY subscribed_at DESC" );
+    
+    if ( empty( $subscribers ) ) {
+        wp_die( 'No subscribers to export' );
+    }
+    
+    // Set headers for CSV download
+    header( 'Content-Type: text/csv; charset=utf-8' );
+    header( 'Content-Disposition: attachment; filename=newsletter-subscribers-' . date( 'Y-m-d' ) . '.csv' );
+    
+    $output = fopen( 'php://output', 'w' );
+    
+    // Add BOM for Excel UTF-8 compatibility
+    fprintf( $output, chr(0xEF).chr(0xBB).chr(0xBF) );
+    
+    // Add column headers
+    fputcsv( $output, array( 'ID', 'Email', 'Status', 'Subscribed At', 'IP Address' ) );
+    
+    // Add data rows
+    foreach ( $subscribers as $subscriber ) {
+        fputcsv( $output, array(
+            $subscriber->id,
+            $subscriber->email,
+            $subscriber->status,
+            $subscriber->subscribed_at,
+            $subscriber->ip_address
+        ) );
+    }
+    
+    fclose( $output );
+    exit;
+}
+add_action( 'admin_init', function() {
+    if ( isset( $_GET['pg_export_newsletter'] ) && $_GET['pg_export_newsletter'] === 'csv' ) {
+        pg_export_newsletter_csv();
+    }
+});
+
+/**
+ * Export Newsletter Page
+ */
+function pg_export_newsletter_page() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'pg_newsletter_subscribers';
+    $total_subscribers = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
+    $active_subscribers = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name WHERE status = 'active'" );
+    ?>
+    <div class="wrap">
+        <h1>📤 Export Newsletter Subscribers</h1>
+        <div class="card" style="max-width: 600px;">
+            <h2>Export Options</h2>
+            <p>Export all newsletter subscribers to a CSV file that can be opened in Excel, Google Sheets, or any spreadsheet application.</p>
+            
+            <div style="background: #f0f0f1; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="margin-top: 0;">📊 Export Statistics</h3>
+                <p><strong>Total Subscribers:</strong> <?php echo $total_subscribers; ?></p>
+                <p><strong>Active Subscribers:</strong> <?php echo $active_subscribers; ?></p>
+                <p><strong>Export Format:</strong> CSV (Comma Separated Values)</p>
+                <p><strong>File Encoding:</strong> UTF-8</p>
+            </div>
+            
+            <p>
+                <a href="<?php echo admin_url( 'admin.php?pg_export_newsletter=csv' ); ?>" class="button button-primary button-hero">
+                    📥 Download CSV File
+                </a>
+            </p>
+            
+            <hr>
+            
+            <h3>What's included in the export?</h3>
+            <ul>
+                <li>✓ Subscriber ID</li>
+                <li>✓ Email Address</li>
+                <li>✓ Status (Active/Unsubscribed)</li>
+                <li>✓ Subscription Date & Time</li>
+                <li>✓ IP Address</li>
+            </ul>
+            
+            <hr>
+            
+            <h3>💡 Pro Tips</h3>
+            <ul>
+                <li>Use this data for email marketing campaigns</li>
+                <li>Import to MailChimp, Constant Contact, or other email services</li>
+                <li>Filter active subscribers for targeted newsletters</li>
+                <li>Analyze subscription trends over time</li>
+            </ul>
+        </div>
+    </div>
+    <?php
+}

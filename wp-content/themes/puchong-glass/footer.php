@@ -143,23 +143,24 @@
                 </a>
             </div>
             
-            <!-- Newsletter Subscribe (Optional) -->
+            <!-- Newsletter Subscribe -->
             <div class="mt-12 max-w-md mx-auto">
                 <div class="text-center mb-4">
-                    <h5 class="font-bold text-lg mb-1">Stay Updated</h5>
-                    <p class="text-gray-400 text-sm">Subscribe to our newsletter for exclusive offers</p>
+                    <h5 class="font-bold text-lg mb-1">📧 Stay Updated</h5>
+                    <p class="text-gray-400 text-sm">Subscribe to our newsletter for exclusive offers & latest updates</p>
                 </div>
-                <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Thanks for subscribing!');">
-                    <input type="email" placeholder="Enter your email" required
+                <form id="newsletter-form" class="flex gap-2">
+                    <input type="email" id="newsletter-email" name="newsletter_email" placeholder="Enter your email" required
                            class="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37] transition-colors">
-                    <button type="submit" 
+                    <button type="submit" id="newsletter-submit-btn"
                             class="px-6 py-3 bg-[#D4AF37] text-[#0A2342] font-bold rounded-lg hover:bg-[#F5C842] transition-all hover:scale-105 flex items-center gap-2">
-                        <span>Subscribe</span>
+                        <span id="newsletter-btn-text">Subscribe</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                         </svg>
                     </button>
                 </form>
+                <div id="newsletter-message" class="mt-3 text-center text-sm" style="display:none;"></div>
             </div>
         </div>
     </div>

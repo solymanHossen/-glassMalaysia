@@ -241,4 +241,78 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initial call to set state
         goToSlide(0);
     }
+
+    // Newsletter Subscription Form Handler
+    const newsletterForm = document.getElementById('newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const emailInput = document.getElementById('newsletter-email');
+            const submitBtn = document.getElementById('newsletter-submit-btn');
+            const btnText = document.getElementById('newsletter-btn-text');
+            const messageDiv = document.getElementById('newsletter-message');
+            const email = emailInput.value.trim();
+            
+            // Validation
+            if (!email || !email.includes('@')) {
+                showNewsletterMessage('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Disable form during submission
+            submitBtn.disabled = true;
+            btnText.textContent = 'Subscribing...';
+            
+            // Make AJAX request
+            fetch(pg_data.ajax_url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: 'pg_newsletter_subscribe',
+                    email: email,
+                    nonce: pg_data.newsletter_nonce
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNewsletterMessage(data.data.message, 'success');
+                    emailInput.value = ''; // Clear input
+                    
+                    // Show confetti or success animation (optional)
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 5000);
+                } else {
+                    showNewsletterMessage(data.data.message || 'Subscription failed. Please try again.', 'error');
+                }
+            })
+            .catch(error => {
+                showNewsletterMessage('An error occurred. Please try again later.', 'error');
+                console.error('Newsletter subscription error:', error);
+            })
+            .finally(() => {
+                // Re-enable form
+                submitBtn.disabled = false;
+                btnText.textContent = 'Subscribe';
+            });
+        });
+    }
+    
+    function showNewsletterMessage(message, type) {
+        const messageDiv = document.getElementById('newsletter-message');
+        messageDiv.style.display = 'block';
+        messageDiv.className = 'mt-3 text-center text-sm px-4 py-2 rounded-lg';
+        
+        if (type === 'success') {
+            messageDiv.className += ' bg-green-500/20 text-green-300 border border-green-500/30';
+            messageDiv.innerHTML = '✓ ' + message;
+        } else {
+            messageDiv.className += ' bg-red-500/20 text-red-300 border border-red-500/30';
+            messageDiv.innerHTML = '✗ ' + message;
+        }
+    }
 });
